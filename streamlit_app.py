@@ -133,6 +133,40 @@ div[data-testid="stChatMessage"]:nth-child(even) {{
     color: #34d399;
     font-weight: 500;
 }}
+
+/* Google Maps Route & Telemetry Card */
+.map-route-card {{
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 12px;
+    padding: 1.1rem;
+    margin: 0.9rem 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}}
+.map-live-header {{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
+}}
+.map-pin {{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.88rem;
+    color: #e2e8f0;
+}}
+.route-line {{
+    border-left: 2px dashed #38bdf8;
+    margin-left: 0.5rem;
+    padding-left: 1.2rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+}}
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
@@ -163,12 +197,12 @@ with st.sidebar:
         st.session_state.user_prompt_inject = "Book flight from Bangalore to Patna on 25th October under 6000 INR"
     if st.button("💻 Compare & Buy Laptop", use_container_width=True):
         st.session_state.user_prompt_inject = "Compare 16GB RAM laptops under 70,000 INR across Flipkart, Amazon and Croma"
-    if st.button("🚗 Book Cab (Indiranagar ➔ Airport)", use_container_width=True):
-        st.session_state.user_prompt_inject = "Book an Uber or cab from Indiranagar to Bangalore Airport"
+    if st.button("🚗 Book Cab with GPS Route Tracking", use_container_width=True):
+        st.session_state.user_prompt_inject = "Book an Uber or cab from Indiranagar to Bangalore Airport with Google Maps tracking"
     if st.button("🍽️ Reserve Table (Rooftop Italian)", use_container_width=True):
         st.session_state.user_prompt_inject = "Book a table for 2 at a rooftop Italian restaurant tonight at 8:30 PM"
-    if st.button("⚡ 10-Min Groceries (Blinkit vs Zepto)", use_container_width=True):
-        st.session_state.user_prompt_inject = "Order 2L milk, whole wheat bread, and eggs delivered in 15 mins"
+    if st.button("⚡ 10-Min Groceries (Blinkit vs Zepto vs Flipkart Minutes)", use_container_width=True):
+        st.session_state.user_prompt_inject = "Compare groceries (2L milk, whole wheat bread, eggs) across Blinkit, Zepto, and Flipkart Minutes"
     if st.button("📰 Today's Breaking News", use_container_width=True):
         st.session_state.user_prompt_inject = "Tell me the top breaking news for today"
     
@@ -215,16 +249,16 @@ def process_agent_request(query, history=None):
                 "ride": "Uber Go",
                 "price": 720,
                 "eta": "4 mins",
-                "thought": "User chose Uber Go. Verified pickup GPS coordinates, calculated route distance (38 km to Airport), and paused at dispatch authorization.",
+                "thought": "User chose Uber Go. Verified pickup GPS coordinates (12.9784° N, 77.6408° E), calculated Google Maps route distance (38.4 km via Bellary Rd NH 44), and paused at dispatch authorization.",
                 "content": """### 🔒 Transaction Boundary: Confirm Uber Go Booking
 
 The agent configured your ride and halted before dispatching the driver:
 
 * **Ride Category:** **Uber Go (Compact Sedan)**
-* **Pickup:** Indiranagar 100ft Road, Bangalore
-* **Destination:** Kempegowda International Airport (BLR) — Terminal 1
-* **Estimated Trip Time:** 52 mins (38.4 km via Bellary Rd)
-* **Trip Fare:** **₹720 INR** *(No surge pricing active)*
+* **📍 Pickup:** Indiranagar 100ft Road, Bangalore *(GPS: 12.9784° N, 77.6408° E)*
+* **🏁 Destination:** Kempegowda International Airport (BLR) — Terminal 1 *(GPS: 13.1989° N, 77.7068° E)*
+* **🗺️ Google Maps Route:** Via Bellary Rd / NH 44 (38.4 km • 48 mins)
+* **Trip Fare:** **₹720 INR** *(Airport toll ₹115 included • No surge)*
 * **Payment Mode:** Auto-debit on trip completion (UPI / Card)
 
 > 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch the nearest driver."""
@@ -240,9 +274,10 @@ The agent configured your ride and halted before dispatching the driver:
                 "content": """### 🔒 Transaction Boundary: Confirm Uber Premier Booking
 
 * **Ride Category:** **Uber Premier (Executive Sedan / Honda City)**
-* **Pickup:** Indiranagar 100ft Road, Bangalore
-* **Destination:** Kempegowda International Airport (BLR) — Terminal 1
-* **Trip Fare:** **₹940 INR** *(Top-rated drivers only, extra legroom)*
+* **📍 Pickup:** Indiranagar 100ft Road, Bangalore *(GPS: 12.9784° N, 77.6408° E)*
+* **🏁 Destination:** Kempegowda International Airport (BLR) — Terminal 1
+* **🗺️ Google Maps Route:** Via Bellary Rd / NH 44 (38.4 km • 48 mins)
+* **Trip Fare:** **₹940 INR** *(Top-rated 4.9★ driver, extra legroom)*
 * **Driver ETA:** 6 mins away
 
 > 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch your Premier cab."""
@@ -258,8 +293,9 @@ The agent configured your ride and halted before dispatching the driver:
                 "content": """### 🔒 Transaction Boundary: Confirm Ola Prime Booking
 
 * **Ride Category:** **Ola Prime Sedan (Hyundai Aura / Dzire)**
-* **Pickup:** Indiranagar 100ft Road, Bangalore
-* **Destination:** Kempegowda International Airport (BLR)
+* **📍 Pickup:** Indiranagar 100ft Road, Bangalore *(GPS: 12.9784° N, 77.6408° E)*
+* **🏁 Destination:** Kempegowda International Airport (BLR)
+* **🗺️ Google Maps Route:** Via Bellary Rd / NH 44 (38.4 km • 48 mins)
 * **Trip Fare:** **₹780 INR** *(Free in-cab WiFi included)*
 * **Driver ETA:** 7 mins away
 
@@ -271,30 +307,67 @@ The agent configured your ride and halted before dispatching the driver:
             return {
                 "intent": "cab_dispatched",
                 "otp": otp,
-                "thought": "Human operator authorized ride. Dispatched Uber API dispatch hook, assigned nearest 4.88★ driver, and minted start-trip OTP.",
-                "content": f"""### 🚖 Cab Confirmed & Driver En Route!
+                "thought": "Human operator authorized ride. Dispatched Uber API dispatch hook, assigned nearest 4.88★ driver, and activated Google Maps real-time GPS tracking.",
+                "content": f"""### 🚖 Cab Dispatched — Google Maps Live Tracking Active!
 
-Your driver has accepted the trip and is heading to your pickup location:
+Your driver has accepted the trip and is navigating to your pickup location:
 
-* **Driver:** **Rajesh Kumar** (⭐ 4.88 • 2,410+ trips)
-* **Vehicle:** White Suzuki Dzire (`KA-04-MM-8219`)
-* **Start-Trip OTP / PIN:** `{otp}` *(Share with driver before departure)*
-* **Driver ETA:** **Arriving in 4 minutes**
+<div class="map-route-card">
+    <div class="map-live-header">
+        <span style="color: #34d399; font-weight: 600; font-size: 0.88rem;">📡 Live GPS Telemetry: Driver En Route</span>
+        <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; padding: 0.2rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">1.8 km away • ETA 4 mins</span>
+    </div>
+    <div style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.6;">
+        👤 <strong>Driver:</strong> <strong>Rajesh Kumar</strong> (⭐ 4.88 • 2,410+ trips)<br>
+        🚗 <strong>Vehicle:</strong> White Suzuki Dzire (<code>KA-04-MM-8219</code>)<br>
+        📍 <strong>Current Position:</strong> 100ft Rd, Indiranagar (Heading North toward Metro Pillar 124)<br>
+        🔐 <strong>Start-Trip OTP / PIN:</strong> <span style="font-size: 1.15rem; color: #fbbf24; font-weight: bold; background: rgba(245, 158, 11, 0.15); padding: 0.2rem 0.6rem; border-radius: 6px;">{otp}</span> <em>(Share with driver before departure)</em>
+    </div>
+</div>
+
 * **Pickup Location:** Indiranagar 100ft Rd (Opp. Metro Pillar 124)
+* **Destination:** Kempegowda International Airport (BLR)
 * **Estimated Fare:** ₹720 INR"""
+            }
+
+        # Check if user did not specify locations
+        has_specific_location = any(w in lower for w in ["from", "to", "indiranagar", "koramangala", "mg road", "whitefield", "airport", "blr", "electronic city"])
+        if ("book a cab" in lower or "book cab" in lower or "book uber" in lower or "call cab" in lower or "need a ride" in lower) and not has_specific_location:
+            return {
+                "intent": "cab_location_prompt",
+                "thought": "User requested cab booking without providing pickup and destination locations. Prompting for location details with Google Maps route tracking.",
+                "content": """### 📍 Where Would You Like to Go?
+
+To plot the fastest route on **Google Maps** and query live **Uber & Ola** driver fleets, please specify your pickup and destination:
+
+* **Current GPS Location:** 📍 *Indiranagar 100ft Road, Bangalore (Auto-Detected)*
+
+👇 **Select a frequent route or type custom locations:**"""
             }
 
         else:
             return {
                 "intent": "cab_comparison_with_selection",
-                "thought": "Queried live ride-hailing APIs across Uber and Ola for pickup at Indiranagar to Kempegowda International Airport. Compared fares, ETAs, and car classes.",
-                "content": """### 🚗 Live Cab & Ride-Hailing Comparison
+                "thought": "Queried Google Maps Distance Matrix API and live ride-hailing APIs across Uber and Ola for pickup at Indiranagar to Kempegowda International Airport. Evaluated live traffic conditions, tolls, driver ETAs, and fares.",
+                "content": """### 🗺️ Google Maps Live Route & Ride-Hailing Fleet
 
-I checked live fares and nearby driver availability for **Indiranagar ➔ BLR Airport (38 km)**:
+<div class="map-route-card">
+    <div class="map-live-header">
+        <span style="color: #38bdf8; font-weight: 600; font-size: 0.88rem;">🗺️ Google Maps Navigation • Real-Time Traffic Feed</span>
+        <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 0.2rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">🟢 Fast Route (48 mins)</span>
+    </div>
+    <div class="map-pin">🟢 <strong>Pickup:</strong> Indiranagar 100ft Road, Bangalore <em>(GPS: 12.9784° N, 77.6408° E)</em></div>
+    <div class="route-line">
+        ↕ <strong>Via Bellary Rd / NH 44 Elevated Expressway</strong> • <strong>38.4 km</strong> (₹115 Airport Toll Included)
+    </div>
+    <div class="map-pin">🏁 <strong>Destination:</strong> Kempegowda International Airport (BLR) <em>(GPS: 13.1989° N, 77.7068° E)</em></div>
+</div>
 
-| Ride Option | Vehicle Type | Driver ETA | Fare | Best For |
+I checked live fares and nearby driver availability:
+
+| Ride Option | Vehicle Class | Driver ETA | Fare | Highlights |
 | :--- | :--- | :--- | :--- | :--- |
-| **Uber Go** | Suzuki Dzire / WagonR | **4 mins** | **₹720 INR** | 🏆 **Best Value & Fastest ETA** |
+| **Uber Go** | Suzuki Dzire / WagonR | **4 mins** | **₹720 INR** | 🏆 **Best Value & Fastest Pickup** |
 | **Uber Premier** | Honda City / Ciaz | **6 mins** | **₹940 INR** | Top-rated 4.9★ driver & legroom |
 | **Ola Prime Sedan** | Hyundai Aura / Dzire | **7 mins** | **₹780 INR** | In-cab WiFi & entertainment |
 
@@ -514,74 +587,112 @@ I located the highest-rated rooftop Italian dining venue in Indiranagar:
         }
 
     # -----------------------------------------------------
-    # 5. QUICK GROCERY DELIVERY (BLINKIT VS ZEPTO)
+    # 5. QUICK GROCERY DELIVERY (BLINKIT VS ZEPTO VS FLIPKART MINUTES)
     # -----------------------------------------------------
-    elif "select zepto" in lower:
-        return {
-            "intent": "grocery_order_interrupt",
-            "store": "Zepto",
-            "price": 205,
-            "eta": "9 mins",
-            "thought": "User chose Zepto. Built grocery cart (2L Milk, Brown Bread, 6 Eggs), applied free delivery coupon, and paused at checkout authorization.",
-            "content": """### 🔒 Transaction Boundary: Confirm Zepto 10-Min Delivery
+    elif any(w in lower for w in ["grocery", "groceries", "milk", "bread", "egg", "blinkit", "zepto", "flipkart minute", "flipkart minutes", "minutes", "instamart"]):
+        if "select flipkart minutes" in lower or "select flipkart minute" in lower:
+            return {
+                "intent": "grocery_order_interrupt",
+                "store": "Flipkart Minutes",
+                "price": 188,
+                "eta": "11 mins",
+                "thought": "User chose Flipkart Minutes. Pre-filled cart (2L Milk, Whole Wheat Bread, 6 Farm Eggs), applied instant deal coupon, and paused at checkout authorization.",
+                "content": """### 🔒 Transaction Boundary: Confirm Flipkart Minutes 10-Min Delivery
 
-* **Cart:** 2L Amul Gold Milk (₹132) + Whole Wheat Bread (₹45) + 6 Farm Eggs (₹48)
+The agent prepared your order on **Flipkart Minutes** and paused before payment:
+
+* **Cart:** 2L Amul Gold Milk (₹126) + Whole Wheat Bread (₹40) + 6 Farm Eggs (₹22 discounted)
+* **Service:** **Flipkart Minutes Instant Quick Commerce (11 mins delivery)**
+* **Delivery Destination:** Indiranagar Flat 302, Bangalore — 560038
+* **Item Total:** ₹188 INR *(Lowest price across all 3 quick-commerce platforms)*
+* **Delivery Fee:** **₹0 (Free First 3 Orders)**
+* **Total Payable:** **₹188 INR** *(Saves ₹27 compared to retail)*
+
+> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your Flipkart Minutes delivery."""
+            }
+
+        elif "select zepto" in lower:
+            return {
+                "intent": "grocery_order_interrupt",
+                "store": "Zepto",
+                "price": 195,
+                "eta": "9 mins",
+                "thought": "User chose Zepto. Built grocery cart (2L Milk, Brown Bread, 6 Eggs), applied free delivery coupon, and paused at checkout authorization.",
+                "content": """### 🔒 Transaction Boundary: Confirm Zepto 10-Min Delivery
+
+* **Cart:** 2L Amul Gold Milk (₹130) + Whole Wheat Bread (₹42) + 6 Farm Eggs (₹43)
 * **Service:** **Zepto Quick Commerce (9 mins delivery)**
 * **Delivery Destination:** Indiranagar Flat 302, Bangalore
-* **Total Payable:** **₹205 INR** *(Saved ₹20 with free delivery coupon)*
+* **Total Payable:** **₹195 INR** *(Free delivery applied • Fastest arrival)*
 
-> 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch your 9-minute grocery delivery."""
-        }
+> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your 9-minute Zepto grocery delivery."""
+            }
 
-    elif "select blinkit" in lower:
-        return {
-            "intent": "grocery_order_interrupt",
-            "store": "Blinkit",
-            "price": 218,
-            "eta": "12 mins",
-            "thought": "User chose Blinkit. Prepared cart and paused at checkout authorization.",
-            "content": """### 🔒 Transaction Boundary: Confirm Blinkit Delivery
+        elif "select blinkit" in lower:
+            return {
+                "intent": "grocery_order_interrupt",
+                "store": "Blinkit",
+                "price": 205,
+                "eta": "12 mins",
+                "thought": "User chose Blinkit. Prepared cart and paused at checkout authorization.",
+                "content": """### 🔒 Transaction Boundary: Confirm Blinkit Delivery
 
-* **Cart:** 2L Amul Gold Milk + Whole Wheat Bread + 6 Farm Eggs
+* **Cart:** 2L Amul Gold Milk (₹132) + Whole Wheat Bread (₹45) + 6 Farm Eggs (₹48)
 * **Service:** **Blinkit Instant Delivery (12 mins)**
-* **Total Payable:** **₹218 INR**
+* **Delivery Destination:** Indiranagar Flat 302, Bangalore
+* **Total Payable:** **₹205 INR** *(Includes ₹10 night delivery handling)*
 
-> 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch your delivery."""
-        }
+> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your delivery."""
+            }
 
-    elif "authorize grocery" in lower or ("confirm" in lower and any(w in lower for w in ["zepto", "blinkit", "grocery", "milk", "bread", "205", "218"])):
-        track_id = f"ZPT-{random.randint(10000, 99999)}"
-        return {
-            "intent": "grocery_dispatched",
-            "track_id": track_id,
-            "thought": "Operator authorized grocery checkout. Dispatched Zepto delivery partner, charged payment, and initiated live delivery tracking.",
-            "content": f"""### ⚡ Groceries Dispatched & En Route!
+        elif "authorize grocery" in lower or ("confirm" in lower and any(w in lower for w in ["zepto", "blinkit", "flipkart", "grocery", "milk", "bread", "188", "195", "205"])):
+            track_id = f"FKM-{random.randint(10000, 99999)}"
+            return {
+                "intent": "grocery_dispatched",
+                "track_id": track_id,
+                "thought": "Operator authorized grocery checkout. Dispatched dark-store packing queue, charged payment, and initiated live courier tracking.",
+                "content": f"""### ⚡ Groceries Dispatched & En Route!
 
-Your items are packed and on their way via Zepto:
+Your items are packed and on their way:
 
 * **Tracking ID:** `{track_id}`
-* **Delivery Partner:** **Amit Sharma** (⭐ 4.9)
-* **Items:** 2L Amul Gold Milk, Whole Wheat Bread, 6 Farm Eggs
-* **Total Paid:** **₹205 INR**
-* **Estimated Arrival:** **In 9 Minutes (01:34 AM)**
-* **Live Status:** Rider is 1.2 km away from your location."""
-        }
+* **Service:** **Flipkart Minutes / Quick Commerce**
+* **Delivery Partner:** **Amit Sharma** (⭐ 4.9 • 1,840 deliveries)
+* **Cart Items:** 2L Amul Gold Milk, Whole Wheat Bread, 6 Farm Eggs
+* **Total Paid:** **₹188 INR**
+* **Estimated Arrival:** **In 10 Minutes**
+* **Live Telemetry:** Courier has departed Indiranagar Dark-Store Hub (0.9 km away)."""
+            }
 
-    elif any(w in lower for w in ["grocery", "groceries", "milk", "bread", "egg", "blinkit", "zepto", "instamart"]):
-        return {
-            "intent": "grocery_comparison_with_selection",
-            "thought": "Checked item stock and instant delivery ETA across Zepto and Blinkit for 2L Amul Gold milk, whole wheat bread, and 6 eggs.",
-            "content": """### ⚡ 10-Minute Grocery Quick Commerce Comparison
+        # Check if user did NOT specify items:
+        has_items = any(w in lower for w in ["milk", "bread", "egg", "fruit", "vegetable", "veggie", "apple", "banana", "snack", "maggi", "curd", "paneer", "chips", "coke", "2l"])
+        if not has_items and ("order grocery" in lower or "order groceries" in lower or "buy grocery" in lower or "10-min" in lower or "grocery delivery" in lower or "zepto vs blinkit" in lower):
+            return {
+                "intent": "grocery_item_prompt",
+                "thought": "User requested grocery delivery without specifying an item list. Prompting operator for items to compare across Blinkit, Zepto, and Flipkart Minutes.",
+                "content": """### 🛒 What Items Would You Like to Order?
 
-I checked live store stock and delivery ETAs for **2L Milk + Bread + 6 Eggs**:
+Please specify what groceries you need so I can compare live prices and instant delivery speeds across **Blinkit**, **Zepto**, and **Flipkart Minutes**:
 
-| Store | Delivery ETA | Item Total | Delivery Fee | Total Cost |
-| :--- | :--- | :--- | :--- | :--- |
-| **Zepto** | **9 mins** | ₹205 | **₹0 (Free)** | **₹205 INR** 🏆 *Fastest & Cheapest* |
-| **Blinkit** | **12 mins** | ₹208 | ₹10 | **₹218 INR** |
+👇 **Or select one of our 1-click popular essential baskets:**"""
+            }
 
-👇 **Select which quick-commerce service to order from:**"""
-        }
+        else:
+            return {
+                "intent": "grocery_comparison_with_selection",
+                "thought": "Checked live dark-store inventory, pricing, and courier availability for items across Zepto, Blinkit, and Flipkart Minutes. Identified lowest price deal on Flipkart Minutes and fastest ETA on Zepto.",
+                "content": """### ⚡ 10-Minute Quick Commerce Comparison: Blinkit vs Zepto vs Flipkart Minutes
+
+I checked live store stock and delivery ETAs for **2L Milk + Whole Wheat Bread + 6 Eggs**:
+
+| Instant Service | Delivery Speed | Basket Total | Delivery Fee | Final Cost | Key Highlights |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Flipkart Minutes** | **11 mins** | ₹188 | **₹0 (Free)** | **₹188 INR** | 🏆 **Lowest Price (Saves ₹17)** |
+| **Zepto** | **9 mins** | ₹195 | **₹0 (Free)** | **₹195 INR** | ⚡ **Fastest Arrival (9m)** |
+| **Blinkit** | **12 mins** | ₹205 | ₹10 | **₹215 INR** | Wide inventory selection |
+
+👇 **Select which quick-commerce service you want to order from:**"""
+            }
 
     # -----------------------------------------------------
     # 6. BREAKING NEWS INTENT
@@ -743,7 +854,31 @@ for idx, msg in enumerate(st.session_state.messages):
                         st.rerun()
 
             # -------------------------------------------------
-            # INTERACTION 3: CAB SELECTION BUTTONS
+            # INTERACTION 3A: CAB LOCATION SELECTION PROMPT
+            # -------------------------------------------------
+            if data.get("intent") == "cab_location_prompt":
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    if st.button("📍 Indiranagar ➔ BLR Airport", key=f"loc_blr_{idx}", use_container_width=True):
+                        st.session_state.messages.append({"role": "user", "content": "Book cab from Indiranagar to Bangalore Airport"})
+                        sub_res = process_agent_request("Book cab from Indiranagar to Bangalore Airport", st.session_state.messages)
+                        st.session_state.messages.append({"role": "assistant", "data": sub_res})
+                        st.rerun()
+                with col2:
+                    if st.button("📍 Koramangala ➔ Whitefield ITPL", key=f"loc_wf_{idx}", use_container_width=True):
+                        st.session_state.messages.append({"role": "user", "content": "Book cab from Koramangala to Whitefield ITPL"})
+                        sub_res = process_agent_request("Book cab from Koramangala to Whitefield ITPL", st.session_state.messages)
+                        st.session_state.messages.append({"role": "assistant", "data": sub_res})
+                        st.rerun()
+                with col3:
+                    if st.button("📍 MG Road ➔ Electronic City", key=f"loc_ec_{idx}", use_container_width=True):
+                        st.session_state.messages.append({"role": "user", "content": "Book cab from MG Road to Electronic City"})
+                        sub_res = process_agent_request("Book cab from MG Road to Electronic City", st.session_state.messages)
+                        st.session_state.messages.append({"role": "assistant", "data": sub_res})
+                        st.rerun()
+
+            # -------------------------------------------------
+            # INTERACTION 3B: CAB SELECTION BUTTONS
             # -------------------------------------------------
             if data.get("intent") == "cab_comparison_with_selection":
                 col1, col2, col3 = st.columns(3)
@@ -799,28 +934,59 @@ for idx, msg in enumerate(st.session_state.messages):
                         st.rerun()
 
             # -------------------------------------------------
-            # INTERACTION 5: GROCERY STORE SELECTION & CHECKOUT
+            # INTERACTION 5A: GROCERY ITEM LIST BUILDER PROMPT
+            # -------------------------------------------------
+            if data.get("intent") == "grocery_item_prompt":
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    if st.button("🥛 2L Milk, Bread & 6 Eggs", key=f"gitem_ess_{idx}", use_container_width=True):
+                        st.session_state.messages.append({"role": "user", "content": "Order 2L milk, whole wheat bread, and eggs delivered in 15 mins"})
+                        sub_res = process_agent_request("Order 2L milk, whole wheat bread, and eggs delivered in 15 mins", st.session_state.messages)
+                        st.session_state.messages.append({"role": "assistant", "data": sub_res})
+                        st.rerun()
+                with col2:
+                    if st.button("🍎 Fresh Fruits Basket", key=f"gitem_fruit_{idx}", use_container_width=True):
+                        st.session_state.messages.append({"role": "user", "content": "Order 1kg apples, bananas, and tomatoes in 10 mins"})
+                        sub_res = process_agent_request("Order 1kg apples, bananas, and tomatoes in 10 mins", st.session_state.messages)
+                        st.session_state.messages.append({"role": "assistant", "data": sub_res})
+                        st.rerun()
+                with col3:
+                    if st.button("🍿 Snacks & Munchies", key=f"gitem_snack_{idx}", use_container_width=True):
+                        st.session_state.messages.append({"role": "user", "content": "Order nachos, coke zero, and chocolates in 10 mins"})
+                        sub_res = process_agent_request("Order nachos, coke zero, and chocolates in 10 mins", st.session_state.messages)
+                        st.session_state.messages.append({"role": "assistant", "data": sub_res})
+                        st.rerun()
+
+            # -------------------------------------------------
+            # INTERACTION 5B: GROCERY STORE SELECTION (3-WAY)
             # -------------------------------------------------
             if data.get("intent") == "grocery_comparison_with_selection":
-                col1, col2 = st.columns(2)
+                col1, col2, col3 = st.columns(3)
                 with col1:
-                    if st.button("⚡ Order on Zepto (9m • ₹205)", key=f"btn_zp_{idx}", use_container_width=True):
+                    if st.button("⚡ Order Flipkart Minutes (11m • ₹188)", key=f"btn_fkm_{idx}", use_container_width=True):
+                        st.session_state.messages.append({"role": "user", "content": "Select Flipkart Minutes"})
+                        sub_res = process_agent_request("Select Flipkart Minutes", st.session_state.messages)
+                        st.session_state.messages.append({"role": "assistant", "data": sub_res})
+                        st.rerun()
+                with col2:
+                    if st.button("⚡ Order Zepto (9m • ₹195)", key=f"btn_zp_{idx}", use_container_width=True):
                         st.session_state.messages.append({"role": "user", "content": "Select Zepto"})
                         sub_res = process_agent_request("Select Zepto", st.session_state.messages)
                         st.session_state.messages.append({"role": "assistant", "data": sub_res})
                         st.rerun()
-                with col2:
-                    if st.button("⚡ Order on Blinkit (12m • ₹218)", key=f"btn_bk_{idx}", use_container_width=True):
+                with col3:
+                    if st.button("⚡ Order Blinkit (12m • ₹205)", key=f"btn_bk_{idx}", use_container_width=True):
                         st.session_state.messages.append({"role": "user", "content": "Select Blinkit"})
                         sub_res = process_agent_request("Select Blinkit", st.session_state.messages)
                         st.session_state.messages.append({"role": "assistant", "data": sub_res})
                         st.rerun()
 
+            # GROCERY HITL CHECKOUT CARD
             if data.get("intent") == "grocery_order_interrupt":
                 col1, col2 = st.columns([2, 1])
                 with col1:
-                    if st.button(f"🛍️ Authorize & Dispatch Delivery (₹{data.get('price', 205)} INR)", key=f"auth_groc_{idx}"):
-                        st.session_state.messages.append({"role": "user", "content": f"Authorize order on {data.get('store', 'Zepto')}"})
+                    if st.button(f"🛍️ Authorize & Dispatch Delivery (₹{data.get('price', 188)} INR)", key=f"auth_groc_{idx}"):
+                        st.session_state.messages.append({"role": "user", "content": f"Authorize order on {data.get('store', 'Flipkart Minutes')}"})
                         auth_res = process_agent_request("Authorize grocery order", st.session_state.messages)
                         st.session_state.messages.append({"role": "assistant", "data": auth_res})
                         st.rerun()

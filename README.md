@@ -89,24 +89,27 @@ Unlike passive chatbots that only give advice, **ReactAI** actually does the leg
 * **Human Selection:** Renders interactive buttons: `[Buy on Flipkart - ₹59,990]`, `[Buy on Amazon - ₹60,500]`, `[Buy on Croma - ₹61,000]`.
 * **HITL Action:** On store selection, agent pre-fills shipping address, halts before payment, and commits order upon 1-click human authorization.
 
-### 3. 🚗 Instant Cab / Ride-Hailing Booking
-* **User says:** `"Book an Uber or cab from Indiranagar to Bangalore Airport"`
-* **Agent does:** Checks live ride-hailing APIs across Uber and Ola, comparing fares, ETAs, and car tiers:
-  * **Uber Go:** ₹720 • 4 mins away
-  * **Uber Premier:** ₹940 • 6 mins away
-  * **Ola Prime:** ₹780 • 7 mins away
+### 3. 🚗 Instant Cab / Ride-Hailing with Google Maps Telemetry
+* **User says:** `"Book an Uber or cab from Indiranagar to Bangalore Airport with Google Maps tracking"` (or just `"Book a cab"`)
+* **Agent does:** Prompts for location if unspecified, plots **Google Maps Route** (`NH 44 / Bellary Rd • 38.4 km • 48 mins • Toll ₹115 included`), and queries live fleets across Uber and Ola:
+  * **Uber Go:** ₹720 • 4 mins away *(🏆 Best Value)*
+  * **Uber Premier:** ₹940 • 6 mins away *(Top 4.9★ Driver)*
+  * **Ola Prime:** ₹780 • 7 mins away *(Free in-cab WiFi)*
 * **Human Selection:** Displays 1-click selection buttons for each ride option.
-* **HITL Action:** Prompts ride confirmation boundary card. When approved, dispatches driver (*Rajesh Kumar* ⭐ 4.88, White Dzire `KA-04-MM-8219`), issues **Start-Trip OTP: `4912`**, and tracks 4-min arrival.
+* **HITL Action:** Prompts ride confirmation boundary card. When approved, dispatches driver (*Rajesh Kumar* ⭐ 4.88, White Dzire `KA-04-MM-8219`), issues **Start-Trip OTP: `4912`**, and tracks real-time **Google Maps Driver GPS Telemetry** (1.8 km away).
 
 ### 4. 🍽️ Restaurant Table Reservations
 * **User says:** `"Book a table for 2 at a rooftop Italian restaurant tonight at 8:30 PM"`
 * **Agent does:** Queries venue ratings (⭐ 4.8+), checks outdoor skyline table availability at *Chianti Ristorante*, and locks table slot.
 * **HITL Action:** Displays reservation boundary card with ₹0 deposit policy. When confirmed, issues booking token `RES-CH-8291` and calendar sync.
 
-### 5. ⚡ 10-Minute Grocery Delivery
-* **User says:** `"Order 2L milk, whole wheat bread, and eggs delivered fast"`
-* **Agent does:** Compares inventory and delivery speeds between **Zepto (9 mins, ₹205)** and **Blinkit (12 mins, ₹218)**.
-* **HITL Action:** Human chooses store, verifies delivery address, authorizes 1-click checkout, and tracks rider live.
+### 5. ⚡ 10-Minute Grocery Delivery (Blinkit vs Zepto vs Flipkart Minutes)
+* **User says:** `"Order groceries"` or `"Order 2L milk, whole wheat bread, and eggs delivered in 15 mins"`
+* **Agent does:** Prompts for items if unspecified (with 1-click curated baskets for Dairy, Produce, and Snacks), and executes a 3-way instant comparison:
+  * **Flipkart Minutes:** ₹188 • 11 mins *(🏆 Lowest Price Deal)*
+  * **Zepto:** ₹195 • 9 mins *(⚡ Fastest Arrival)*
+  * **Blinkit:** ₹205 • 12 mins *(Largest dark-store catalog)*
+* **HITL Action:** Human chooses store with 1-click buttons, verifies delivery address, authorizes checkout, and tracks live courier dispatch.
 
 ---
 

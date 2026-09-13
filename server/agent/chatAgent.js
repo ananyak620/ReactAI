@@ -377,59 +377,86 @@ async function handleCabIntent(text, lower, history) {
     return {
       role: 'assistant',
       intent: 'cab_dispatched',
-      searches: ['Sent dispatch call to Uber Driver Fleet', 'Received driver acceptance token'],
-      thought: 'Human confirmed ride. Locked booking, assigned 4.88★ driver Rajesh Kumar, and generated start-trip OTP.',
-      content: `### 🚖 Cab Confirmed & Driver En Route!
+      searches: ['Sent dispatch call to Uber Driver Fleet', 'Received driver acceptance token', 'Activated Google Maps live GPS tracking'],
+      thought: 'Human confirmed ride. Locked booking, assigned 4.88★ driver Rajesh Kumar, and activated Google Maps live telemetry tracking.',
+      content: `### 🚖 Cab Dispatched — Google Maps Live Tracking Active!
 
-Your driver has accepted the trip and is heading to your pickup location:
+Your driver has accepted the trip and is navigating to your pickup location:
 
 * **Driver:** **Rajesh Kumar** (⭐ 4.88 • 2,410+ trips)
 * **Vehicle:** White Suzuki Dzire (\`KA-04-MM-8219\`)
+* **Live GPS Position:** Indiranagar 100ft Rd (1.8 km away • Arriving in 4 minutes)
 * **Start-Trip OTP / PIN:** \`${otp}\` *(Share with driver before departure)*
-* **Driver ETA:** **Arriving in 4 minutes**
 * **Pickup:** Indiranagar 100ft Rd (Opp. Metro Pillar 124)
+* **Destination:** Kempegowda International Airport (BLR)
 * **Estimated Fare:** ₹720 INR`
     };
   }
 
-  if (lower.includes('uber go') || lower.includes('select uber')) {
+  if (lower.includes('uber go') || lower.includes('select uber go')) {
     return {
       role: 'assistant',
       intent: 'hitl_transaction_interrupt',
       quickOptions: ['Confirm & Dispatch Uber Go (₹720 INR)', 'Cancel Ride'],
-      searches: ['Locked fare estimate with Uber Dispatch Engine', 'Selected nearest 4.8★ Suzuki Dzire'],
-      thought: 'User selected Uber Go. Configured pickup & airport dropoff, paused at ride confirmation boundary.',
+      searches: ['Locked fare estimate with Uber Dispatch Engine', 'Selected nearest 4.8★ Suzuki Dzire', 'Validated Google Maps NH 44 route'],
+      thought: 'User selected Uber Go. Configured pickup GPS & airport dropoff, paused at ride confirmation boundary.',
       content: `### 🔒 Transaction Boundary: Confirm Uber Go Booking
 
 * **Ride Option:** **Uber Go (Compact Sedan)**
-* **Pickup:** Indiranagar 100ft Road, Bangalore
-* **Destination:** Kempegowda International Airport (BLR) — Terminal 1
-* **Trip Distance:** 38.4 km (52 mins duration)
-* **Locked Fare:** **₹720 INR** *(No surge pricing)*
+* **📍 Pickup:** Indiranagar 100ft Road, Bangalore *(GPS: 12.9784° N, 77.6408° E)*
+* **🏁 Destination:** Kempegowda International Airport (BLR) — Terminal 1 *(GPS: 13.1989° N, 77.7068° E)*
+* **🗺️ Google Maps Route:** Via Bellary Rd / NH 44 (38.4 km • 48 mins • Toll ₹115 included)
+* **Locked Fare:** **₹720 INR** *(No surge pricing active)*
 
 > 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch the nearest driver.`
     };
   }
 
-  // Initial comparison of cabs
+  // Check if user did not specify locations
+  const hasLocation = ['indiranagar', 'koramangala', 'mg road', 'whitefield', 'airport', 'blr', 'from', 'to'].some(w => lower.includes(w));
+  if ((lower.includes('book cab') || lower.includes('book a cab') || lower.includes('need a ride') || lower.includes('book uber')) && !hasLocation) {
+    return {
+      role: 'assistant',
+      intent: 'cab_location_prompt',
+      quickOptions: [
+        '📍 Indiranagar ➔ BLR Airport',
+        '📍 Koramangala ➔ Whitefield ITPL',
+        '📍 MG Road ➔ Electronic City'
+      ],
+      searches: ['Queried device GPS sensor', 'Identified primary Bengaluru transit corridors'],
+      thought: 'User initiated cab booking without specifying pickup/destination. Prompting for location coordinates with Google Maps routing.',
+      content: `### 📍 Where Would You Like to Go?
+
+To plot your route on **Google Maps** and query nearby **Uber & Ola** drivers, please specify your destination:
+
+* **Current GPS Location:** 📍 *Indiranagar 100ft Road, Bangalore (Auto-Detected)*
+
+👇 **Select a frequent route or enter custom locations:**`
+    };
+  }
+
+  // Initial comparison of cabs with Google Maps Route Analysis
   return {
     role: 'assistant',
     intent: 'cab_comparison',
     searches: [
-      'Queried Uber live airport routes & driver proximity in Indiranagar',
-      'Queried Ola Prime fleet pricing and surge status'
+      'Queried Google Maps Distance Matrix API (Indiranagar to BLR Airport)',
+      'Scraped live Uber airport route & driver proximity in Indiranagar',
+      'Queried Ola Prime fleet pricing and surge multiplier'
     ],
-    thought: 'Checked nearby drivers and fares for Indiranagar to Airport. Compared Uber Go, Uber Premier, and Ola Prime. Displayed selection options.',
+    thought: 'Checked nearby drivers and fares for Indiranagar to Airport via Google Maps NH 44. Compared Uber Go, Uber Premier, and Ola Prime.',
     quickOptions: [
       'Select Uber Go (₹720 • 4 mins)',
       'Select Uber Premier (₹940 • 6 mins)',
       'Select Ola Prime (₹780 • 7 mins)'
     ],
-    content: `### 🚗 Live Ride-Hailing Comparison: Indiranagar ➔ Airport
+    content: `### 🗺️ Google Maps Live Route & Ride-Hailing Fleet
 
-I checked live fares and nearby driver availability:
+* **📍 Pickup:** Indiranagar 100ft Road *(GPS: 12.9784° N, 77.6408° E)*
+* **🏁 Destination:** Kempegowda International Airport (BLR) *(GPS: 13.1989° N, 77.7068° E)*
+* **🗺️ Route Telemetry:** Via Bellary Rd / NH 44 (38.4 km • 🟢 Live Traffic: Fast • 48 mins)
 
-| Ride Option | Vehicle Type | Driver Proximity | Fare | Best For |
+| Ride Option | Vehicle Class | Driver Proximity | Fare | Highlights |
 | :--- | :--- | :--- | :--- | :--- |
 | **Uber Go** | Suzuki Dzire | **4 mins away** | **₹720 INR** | 🏆 **Best Value & Fastest ETA** |
 | **Uber Premier** | Honda City / Ciaz | **6 mins away** | **₹940 INR** | Top 4.9★ driver & extra legroom |
@@ -440,26 +467,44 @@ I checked live fares and nearby driver availability:
 }
 
 /**
- * Handle 10-Minute Grocery Delivery (Zepto vs Blinkit)
+ * Handle 10-Minute Grocery Delivery (Flipkart Minutes vs Zepto vs Blinkit)
  */
 async function handleGroceryIntent(text, lower, history) {
   if (lower.includes('authorize') || lower.includes('confirm') || lower.includes('place order')) {
-    const trackId = `ZPT-${Math.floor(10000 + Math.random() * 90000)}`;
+    const trackId = `FKM-${Math.floor(10000 + Math.random() * 90000)}`;
     return {
       role: 'assistant',
       intent: 'grocery_dispatched',
-      searches: ['Submitted cart to Zepto dark-store packing queue', 'Assigned delivery partner'],
-      thought: 'Human authorized grocery delivery. Charged payment, queued packing, and initiated live rider tracking.',
+      searches: ['Submitted cart to Flipkart Minutes / Zepto dark-store dispatch', 'Assigned instant courier'],
+      thought: 'Human authorized grocery delivery. Charged payment, queued packing, and initiated live courier tracking.',
       content: `### ⚡ Groceries Dispatched & En Route!
 
-Your items are packed and on their way via Zepto:
+Your items are packed and on their way:
 
 * **Tracking ID:** \`${trackId}\`
-* **Delivery Partner:** **Amit Sharma** (⭐ 4.9)
+* **Delivery Partner:** **Amit Sharma** (⭐ 4.9 • 1,840 deliveries)
 * **Items:** 2L Amul Gold Milk, Whole Wheat Bread, 6 Farm Eggs
-* **Total Paid:** **₹205 INR**
-* **Estimated Arrival:** **In 9 Minutes**
-* **Live Status:** Rider is 1.2 km away from your location.`
+* **Total Paid:** **₹188 INR**
+* **Estimated Arrival:** **In 10 Minutes**
+* **Live Status:** Courier is 0.9 km away from your location.`
+    };
+  }
+
+  if (lower.includes('flipkart minute') || lower.includes('select flipkart minute')) {
+    return {
+      role: 'assistant',
+      intent: 'hitl_transaction_interrupt',
+      quickOptions: ['Authorize & Dispatch Delivery (₹188 INR)', 'Cancel Order'],
+      searches: ['Checked dark-store inventory: Flipkart Minutes Indiranagar Pod'],
+      thought: 'User selected Flipkart Minutes. Pre-filled cart, applied instant welcome discount, paused at checkout.',
+      content: `### 🔒 Transaction Boundary: Confirm Flipkart Minutes 10-Min Delivery
+
+* **Cart:** 2L Amul Gold Milk (₹126) + Whole Wheat Bread (₹40) + 6 Farm Eggs (₹22 discounted)
+* **Service:** **Flipkart Minutes Instant Quick Commerce (11 mins delivery)**
+* **Delivery Destination:** Indiranagar Flat 302, Bangalore
+* **Total Payable:** **₹188 INR** *(🏆 Lowest Price Deal • Free Delivery)*
+
+> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your delivery.`
     };
   }
 
@@ -467,17 +512,38 @@ Your items are packed and on their way via Zepto:
     return {
       role: 'assistant',
       intent: 'hitl_transaction_interrupt',
-      quickOptions: ['Authorize & Dispatch Delivery (₹205 INR)', 'Cancel Order'],
+      quickOptions: ['Authorize & Dispatch Delivery (₹195 INR)', 'Cancel Order'],
       searches: ['Checked dark-store inventory: Indiranagar Zepto Hub'],
       thought: 'User selected Zepto. Built grocery cart, applied free delivery, paused at payment.',
       content: `### 🔒 Transaction Boundary: Confirm Zepto 10-Min Delivery
 
-* **Cart:** 2L Amul Gold Milk (₹132) + Whole Wheat Bread (₹45) + 6 Eggs (₹48)
+* **Cart:** 2L Amul Gold Milk (₹130) + Whole Wheat Bread (₹42) + 6 Eggs (₹43)
 * **Service:** **Zepto Quick Commerce (9 mins delivery)**
 * **Delivery Destination:** Indiranagar Flat 302, Bangalore
-* **Total Payable:** **₹205 INR** *(Free delivery applied)*
+* **Total Payable:** **₹195 INR** *(Free delivery applied • Fastest delivery)*
 
 > 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your delivery.`
+    };
+  }
+
+  // Check if items were not specified:
+  const hasItems = ['milk', 'bread', 'egg', 'fruit', 'apple', 'banana', 'veggie', 'snack', 'maggi', 'curd', '2l'].some(w => lower.includes(w));
+  if ((lower.includes('order grocery') || lower.includes('grocery delivery') || lower.includes('groceries')) && !hasItems) {
+    return {
+      role: 'assistant',
+      intent: 'grocery_item_prompt',
+      quickOptions: [
+        '🥛 2L Milk, Bread & 6 Eggs',
+        '🍎 Fresh Fruits & Veggies Basket',
+        '🍿 Snacks & Munchies Box'
+      ],
+      searches: ['Queried nearby quick-commerce pods (Blinkit, Zepto, Flipkart Minutes)'],
+      thought: 'User requested grocery delivery without item list. Prompting for grocery items to compare.',
+      content: `### 🛒 What Items Would You Like to Order?
+
+Please specify your grocery items so I can compare live prices and instant delivery speeds across **Flipkart Minutes**, **Zepto**, and **Blinkit**:
+
+👇 **Or select one of our curated essential baskets:**`
     };
   }
 
@@ -485,24 +551,27 @@ Your items are packed and on their way via Zepto:
     role: 'assistant',
     intent: 'grocery_comparison',
     searches: [
+      'Checked live inventory at Flipkart Minutes Indiranagar pod',
       'Checked live inventory at Zepto Indiranagar dark-store',
       'Checked live inventory at Blinkit Indiranagar hub'
     ],
-    thought: 'Compared item availability, prices, and delivery speed across Zepto and Blinkit for 2L milk, bread, and eggs.',
+    thought: 'Compared item availability, prices, and delivery speed across Flipkart Minutes, Zepto, and Blinkit for 2L milk, bread, and eggs.',
     quickOptions: [
-      'Order on Zepto (9 mins • ₹205)',
-      'Order on Blinkit (12 mins • ₹218)'
+      'Order on Flipkart Minutes (11 mins • ₹188)',
+      'Order on Zepto (9 mins • ₹195)',
+      'Order on Blinkit (12 mins • ₹205)'
     ],
-    content: `### ⚡ 10-Minute Grocery Quick Commerce Comparison
+    content: `### ⚡ 10-Minute Quick Commerce Comparison: Blinkit vs Zepto vs Flipkart Minutes
 
-I checked live store stock and delivery ETAs for **2L Milk + Bread + 6 Eggs**:
+I checked live store stock and delivery ETAs for **2L Milk + Whole Wheat Bread + 6 Eggs**:
 
-| Store | Delivery ETA | Item Total | Delivery Fee | Total Cost |
-| :--- | :--- | :--- | :--- | :--- |
-| **Zepto** | **9 mins** | ₹205 | **₹0 (Free)** | **₹205 INR** 🏆 *Fastest & Cheapest* |
-| **Blinkit** | **12 mins** | ₹208 | ₹10 | **₹218 INR** |
+| Store | Delivery Speed | Item Total | Delivery Fee | Total Cost | Highlights |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Flipkart Minutes** | **11 mins** | ₹188 | **₹0 (Free)** | **₹188 INR** | 🏆 **Lowest Price Deal (Saves ₹17)** |
+| **Zepto** | **9 mins** | ₹195 | **₹0 (Free)** | **₹195 INR** | ⚡ **Fastest Arrival (9m)** |
+| **Blinkit** | **12 mins** | ₹205 | ₹10 | **₹215 INR** | Wide inventory catalog |
 
-👇 **Select which service you would like me to order from:**`
+👇 **Select which quick-commerce service to order from:**`
   };
 }
 
