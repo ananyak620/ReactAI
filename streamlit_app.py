@@ -31,16 +31,22 @@ for p in bg_image_paths:
 # Custom Glassmorphic Dark Styling with Original Background
 custom_css = f"""
 <style>
-/* Main Background with Cosmic Galaxy & Robot */
+/* Main Background with Cosmic Galaxy & Robot - Full Viewport Fit */
 .stApp {{
     background: linear-gradient(180deg, rgba(4, 6, 10, 0.65) 0%, rgba(6, 9, 16, 0.72) 50%, rgba(4, 6, 10, 0.88) 100%),
                 url("data:image/jpeg;base64,{bg_base64}") !important;
-    background-size: cover !important;
-    background-position: center center !important;
+    background-size: 100% 100% !important;
+    background-position: center top !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
     color: #f8fafc !important;
     font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}}
+
+/* Clean up Streamlit default excessive blank header space */
+.block-container {{
+    padding-top: 2.2rem !important;
+    padding-bottom: 5.5rem !important;
 }}
 
 /* Sidebar styling */
