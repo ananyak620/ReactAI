@@ -129,21 +129,6 @@ with st.sidebar:
     st.markdown("Autonomous ReAct Loop with Human-in-the-Loop Boundaries.")
     
     st.markdown("---")
-    st.markdown("#### ⚡ Reasoning Engine")
-    provider = st.selectbox(
-        "Intelligence Provider",
-        ["Anakin.ai Multi-Model Hub", "Local Autonomous Engine", "Direct OpenAI (GPT-4o)", "Google Gemini 2.0"],
-        index=0
-    )
-    
-    anakin_key = st.text_input("Anakin API Key (Optional)", type="password", placeholder="Paste Anakin key...")
-    model_choice = st.selectbox(
-        "Model Tier",
-        ["Claude 3.7 Sonnet", "GPT-4o", "Claude 3.5 Sonnet", "Llama 3.3 70B"],
-        index=0
-    )
-    
-    st.markdown("---")
     st.markdown("#### 🚀 Quick Demonstrations")
     if st.button("✈️ Book Flight (BLR ➔ PAT)", use_container_width=True):
         st.session_state.user_prompt_inject = "Book flight from Bangalore to Patna on 25th October under 6000 INR"
@@ -151,6 +136,21 @@ with st.sidebar:
         st.session_state.user_prompt_inject = "Compare 16GB RAM laptops under 70,000 INR across Flipkart, Amazon and Croma"
     if st.button("📰 Today's Breaking News", use_container_width=True):
         st.session_state.user_prompt_inject = "Tell me the top breaking news for today"
+    
+    st.markdown("---")
+    with st.expander("⚡ Reasoning Engine & Settings", expanded=False):
+        provider = st.selectbox(
+            "Intelligence Provider",
+            ["Anakin.ai Multi-Model Hub", "Local Autonomous Engine", "Direct OpenAI (GPT-4o)", "Google Gemini 2.0"],
+            index=0
+        )
+        
+        anakin_key = st.text_input("Anakin API Key (Optional)", type="password", placeholder="Paste Anakin key...")
+        model_choice = st.selectbox(
+            "Model Tier",
+            ["Claude 3.7 Sonnet", "GPT-4o", "Claude 3.5 Sonnet", "Llama 3.3 70B"],
+            index=0
+        )
     
     if st.button("🗑️ Clear Conversation", use_container_width=True):
         st.session_state.messages = []
