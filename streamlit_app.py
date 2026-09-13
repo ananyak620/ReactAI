@@ -1,6 +1,7 @@
 import streamlit as st
 import time
 import json
+import base64
 import os
 import random
 from datetime import datetime
@@ -15,30 +16,42 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom Glassmorphic Dark Styling
-custom_css = """
+# Load Original Cosmic Galaxy & Robot Background
+bg_image_paths = [
+    os.path.join(os.path.dirname(__file__), "client", "public", "galaxy_robot_bg.jpg"),
+    os.path.join(os.path.dirname(__file__), "galaxy_robot_bg.jpg")
+]
+bg_base64 = ""
+for p in bg_image_paths:
+    if os.path.exists(p):
+        with open(p, "rb") as img_f:
+            bg_base64 = base64.b64encode(img_f.read()).decode()
+        break
+
+# Custom Glassmorphic Dark Styling with Original Background
+custom_css = f"""
 <style>
-/* Background and typography */
-.stApp {
-    background-color: #0b1120;
-    background-image: radial-gradient(at 0% 0%, rgba(30, 58, 138, 0.3) 0, transparent 50%), 
-                      radial-gradient(at 100% 100%, rgba(88, 28, 135, 0.25) 0, transparent 50%),
-                      url("https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?q=80&w=2070&auto=format&fit=crop");
-    background-size: cover;
-    background-attachment: fixed;
-    color: #f8fafc;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
+/* Main Background with Cosmic Galaxy & Robot */
+.stApp {{
+    background: linear-gradient(180deg, rgba(4, 6, 10, 0.65) 0%, rgba(6, 9, 16, 0.72) 50%, rgba(4, 6, 10, 0.88) 100%),
+                url("data:image/jpeg;base64,{bg_base64}") !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+    color: #f8fafc !important;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+}}
 
 /* Sidebar styling */
-section[data-testid="stSidebar"] {
+section[data-testid="stSidebar"] {{
     background-color: rgba(15, 23, 42, 0.95) !important;
     backdrop-filter: blur(16px);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
-}
+}}
 
 /* Chat container styling */
-div[data-testid="stChatMessage"] {
+div[data-testid="stChatMessage"] {{
     background: rgba(15, 23, 42, 0.75) !important;
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -46,45 +59,45 @@ div[data-testid="stChatMessage"] {
     padding: 1.25rem !important;
     margin-bottom: 1rem !important;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
-}
+}}
 
 /* User chat message */
-div[data-testid="stChatMessage"]:nth-child(even) {
+div[data-testid="stChatMessage"]:nth-child(even) {{
     background: rgba(22, 35, 58, 0.85) !important;
     border: 1px solid rgba(56, 189, 248, 0.25) !important;
-}
+}}
 
 /* HITL Boundary Alert Box */
-.hitl-boundary-card {
+.hitl-boundary-card {{
     background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(15, 23, 42, 0.95));
     border: 1px solid rgba(245, 158, 11, 0.5);
     border-radius: 12px;
     padding: 1.25rem;
     margin: 1rem 0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-}
+}}
 
 /* Success Card */
-.success-action-card {
+.success-action-card {{
     background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(15, 23, 42, 0.95));
     border: 1px solid rgba(16, 185, 129, 0.5);
     border-radius: 12px;
     padding: 1.25rem;
     margin: 1rem 0;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-}
+}}
 
 /* Store / Ride Selection Card */
-.selection-action-card {
+.selection-action-card {{
     background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(15, 23, 42, 0.95));
     border: 1px solid rgba(56, 189, 248, 0.4);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     margin: 0.75rem 0;
-}
+}}
 
 /* Buttons */
-.stButton>button {
+.stButton>button {{
     background: linear-gradient(135deg, #10b981, #059669) !important;
     color: #ffffff !important;
     border: none !important;
@@ -93,15 +106,15 @@ div[data-testid="stChatMessage"]:nth-child(even) {
     font-weight: 600 !important;
     box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
     transition: all 0.2s ease !important;
-}
+}}
 
-.stButton>button:hover {
+.stButton>button:hover {{
     transform: translateY(-2px) !important;
     box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6) !important;
-}
+}}
 
 /* Verification Badge */
-.verification-badge {
+.verification-badge {{
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
@@ -113,7 +126,7 @@ div[data-testid="stChatMessage"]:nth-child(even) {
     font-size: 0.78rem;
     color: #34d399;
     font-weight: 500;
-}
+}}
 </style>
 """
 st.markdown(custom_css, unsafe_allow_html=True)
@@ -131,12 +144,33 @@ if "selected_ride" not in st.session_state:
     st.session_state.selected_ride = None
 
 # ---------------------------------------------------------
-# SIDEBAR CONTROLS & SETTINGS
+# SIDEBAR CONTROLS & SETTINGS (DEMOS UP, REASONING DOWN)
 # ---------------------------------------------------------
 with st.sidebar:
     st.markdown("### 🌌 ReactAI Control")
     st.markdown("Autonomous ReAct Loop with Human-in-the-Loop Boundaries.")
     
+    st.markdown("---")
+    st.markdown("#### 🚀 Quick Demonstrations")
+    
+    if st.button("✈️ Book Flight (BLR ➔ PAT)", use_container_width=True):
+        st.session_state.user_prompt_inject = "Book flight from Bangalore to Patna on 25th October under 6000 INR"
+    if st.button("💻 Compare & Buy Laptop", use_container_width=True):
+        st.session_state.user_prompt_inject = "Compare 16GB RAM laptops under 70,000 INR across Flipkart, Amazon and Croma"
+    if st.button("🚗 Book Cab (Indiranagar ➔ Airport)", use_container_width=True):
+        st.session_state.user_prompt_inject = "Book an Uber or cab from Indiranagar to Bangalore Airport"
+    if st.button("🍽️ Reserve Table (Rooftop Italian)", use_container_width=True):
+        st.session_state.user_prompt_inject = "Book a table for 2 at a rooftop Italian restaurant tonight at 8:30 PM"
+    if st.button("⚡ 10-Min Groceries (Blinkit vs Zepto)", use_container_width=True):
+        st.session_state.user_prompt_inject = "Order 2L milk, whole wheat bread, and eggs delivered in 15 mins"
+    if st.button("📰 Today's Breaking News", use_container_width=True):
+        st.session_state.user_prompt_inject = "Tell me the top breaking news for today"
+    
+    if st.button("🗑️ Clear Conversation", use_container_width=True):
+        st.session_state.messages = []
+        st.session_state.pending_hitl = None
+        st.rerun()
+
     st.markdown("---")
     st.markdown("#### ⚡ Reasoning Engine")
     provider = st.selectbox(
@@ -158,28 +192,6 @@ with st.sidebar:
         ["GPT-4o", "Claude 3.7 Sonnet", "Claude 3.5 Sonnet", "Llama 3.3 70B"],
         index=0
     )
-    
-    st.markdown("---")
-    st.markdown("#### 🚀 Everyday Concierge Scenarios")
-    
-    if st.button("✈️ Book Flight (BLR ➔ PAT)", use_container_width=True):
-        st.session_state.user_prompt_inject = "Book flight from Bangalore to Patna on 25th October under 6000 INR"
-    if st.button("💻 Compare & Buy Laptop", use_container_width=True):
-        st.session_state.user_prompt_inject = "Compare 16GB RAM laptops under 70,000 INR across Flipkart, Amazon and Croma"
-    if st.button("🚗 Book Cab (Indiranagar ➔ Airport)", use_container_width=True):
-        st.session_state.user_prompt_inject = "Book an Uber or cab from Indiranagar to Bangalore Airport"
-    if st.button("🍽️ Reserve Table (Rooftop Italian)", use_container_width=True):
-        st.session_state.user_prompt_inject = "Book a table for 2 at a rooftop Italian restaurant tonight at 8:30 PM"
-    if st.button("⚡ 10-Min Groceries (Blinkit vs Zepto)", use_container_width=True):
-        st.session_state.user_prompt_inject = "Order 2L milk, whole wheat bread, and eggs delivered in 15 mins"
-    if st.button("📰 Today's Breaking News", use_container_width=True):
-        st.session_state.user_prompt_inject = "Tell me the top breaking news for today"
-    
-    st.markdown("---")
-    if st.button("🗑️ Clear Conversation", use_container_width=True):
-        st.session_state.messages = []
-        st.session_state.pending_hitl = None
-        st.rerun()
 
 # ---------------------------------------------------------
 # AGENTIC LOGIC & TOOLS (ReAct + Agentic RAG + HITL)
