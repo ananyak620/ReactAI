@@ -21,15 +21,15 @@ export async function processConversationalAgentMessage({ message, history = [],
   // Determine domain category for Planner (using full conversational context for follow-up/authorization messages)
   const fullContextLower = (history.map(h => h.content).join(' ') + ' ' + text).toLowerCase();
   let domainCategory = 'general';
-  if (lower.includes('flight') || lower.includes('fly') || ((lower.includes('authorize') || lower.includes('pay')) && (fullContextLower.includes('flight') || fullContextLower.includes('patna')))) {
-    domainCategory = 'travel_policy';
-  } else if (lower.includes('laptop') || lower.includes('buy') || lower.includes('flipkart') || lower.includes('croma') || ((lower.includes('authorize') || lower.includes('place order')) && fullContextLower.includes('laptop'))) {
-    domainCategory = 'procurement';
-  } else if (lower.includes('cab') || lower.includes('uber') || lower.includes('ola') || lower.includes('taxi') || lower.includes('ride')) {
+  if (lower.includes('cab') || lower.includes('uber') || lower.includes('ola') || lower.includes('taxi') || lower.includes('ride')) {
     domainCategory = 'ride_hailing';
-  } else if (lower.includes('grocery') || lower.includes('groceries') || lower.includes('milk') || lower.includes('zepto') || lower.includes('blinkit')) {
+  } else if (lower.includes('grocery') || lower.includes('groceries') || lower.includes('milk') || lower.includes('bread') || lower.includes('egg') || lower.includes('zepto') || lower.includes('blinkit') || lower.includes('minute')) {
     domainCategory = 'quick_commerce';
-  } else if (lower.includes('news') || lower.includes('today')) {
+  } else if (lower.includes('flight') || lower.includes('fly') || ((lower.includes('authorize') || lower.includes('pay')) && (fullContextLower.includes('flight') || fullContextLower.includes('patna')))) {
+    domainCategory = 'travel_policy';
+  } else if (lower.includes('laptop') || lower.includes('croma') || (lower.includes('amazon') && !lower.includes('grocery')) || (lower.includes('flipkart') && !lower.includes('minute') && !lower.includes('grocery')) || ((lower.includes('authorize') || lower.includes('place order')) && fullContextLower.includes('laptop'))) {
+    domainCategory = 'procurement';
+  } else if (lower.includes('news') || lower.includes('today') || lower.includes('headline')) {
     domainCategory = 'intelligence';
   } else if (lower.includes('restaurant') || lower.includes('table') || lower.includes('dinner')) {
     domainCategory = 'dining_policy';

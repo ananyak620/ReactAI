@@ -375,9 +375,117 @@ I checked live fares and nearby driver availability:
             }
 
     # -----------------------------------------------------
-    # 2. LAPTOP E-COMMERCE INTENTS
+    # 2. QUICK GROCERY DELIVERY (BLINKIT VS ZEPTO VS FLIPKART MINUTES)
     # -----------------------------------------------------
-    elif any(w in lower for w in ["laptop", "flipkart", "croma"]) or ("amazon" in lower and "cab" not in lower):
+    elif any(w in lower for w in ["grocery", "groceries", "milk", "bread", "egg", "blinkit", "zepto", "flipkart minute", "flipkart minutes", "minutes", "instamart"]):
+        if "select flipkart minutes" in lower or "select flipkart minute" in lower:
+            return {
+                "intent": "grocery_order_interrupt",
+                "store": "Flipkart Minutes",
+                "price": 188,
+                "eta": "11 mins",
+                "thought": "User chose Flipkart Minutes. Pre-filled cart (2L Milk, Whole Wheat Bread, 6 Farm Eggs), applied instant deal coupon, and paused at checkout authorization.",
+                "content": """### 🔒 Transaction Boundary: Confirm Flipkart Minutes 10-Min Delivery
+
+The agent prepared your order on **Flipkart Minutes** and paused before payment:
+
+* **Cart:** 2L Amul Gold Milk (₹126) + Whole Wheat Bread (₹40) + 6 Farm Eggs (₹22 discounted)
+* **Service:** **Flipkart Minutes Instant Quick Commerce (11 mins delivery)**
+* **Delivery Destination:** Indiranagar Flat 302, Bangalore — 560038
+* **Item Total:** ₹188 INR *(Lowest price across all 3 quick-commerce platforms)*
+* **Delivery Fee:** **₹0 (Free First 3 Orders)**
+* **Total Payable:** **₹188 INR** *(Saves ₹27 compared to retail)*
+
+> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your Flipkart Minutes delivery."""
+            }
+
+        elif "select zepto" in lower:
+            return {
+                "intent": "grocery_order_interrupt",
+                "store": "Zepto",
+                "price": 195,
+                "eta": "9 mins",
+                "thought": "User chose Zepto. Built grocery cart (2L Milk, Brown Bread, 6 Eggs), applied free delivery coupon, and paused at checkout authorization.",
+                "content": """### 🔒 Transaction Boundary: Confirm Zepto 10-Min Delivery
+
+* **Cart:** 2L Amul Gold Milk (₹130) + Whole Wheat Bread (₹42) + 6 Farm Eggs (₹43)
+* **Service:** **Zepto Quick Commerce (9 mins delivery)**
+* **Delivery Destination:** Indiranagar Flat 302, Bangalore
+* **Total Payable:** **₹195 INR** *(Free delivery applied • Fastest arrival)*
+
+> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your 9-minute Zepto grocery delivery."""
+            }
+
+        elif "select blinkit" in lower:
+            return {
+                "intent": "grocery_order_interrupt",
+                "store": "Blinkit",
+                "price": 205,
+                "eta": "12 mins",
+                "thought": "User chose Blinkit. Prepared cart and paused at checkout authorization.",
+                "content": """### 🔒 Transaction Boundary: Confirm Blinkit Delivery
+
+* **Cart:** 2L Amul Gold Milk (₹132) + Whole Wheat Bread (₹45) + 6 Farm Eggs (₹48)
+* **Service:** **Blinkit Instant Delivery (12 mins)**
+* **Delivery Destination:** Indiranagar Flat 302, Bangalore
+* **Total Payable:** **₹205 INR** *(Includes ₹10 night delivery handling)*
+
+> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your delivery."""
+            }
+
+        elif "authorize grocery" in lower or ("confirm" in lower and any(w in lower for w in ["zepto", "blinkit", "flipkart", "grocery", "milk", "bread", "188", "195", "205"])):
+            track_id = f"FKM-{random.randint(10000, 99999)}"
+            return {
+                "intent": "grocery_dispatched",
+                "track_id": track_id,
+                "thought": "Operator authorized grocery checkout. Dispatched dark-store packing queue, charged payment, and initiated live courier tracking.",
+                "content": f"""### ⚡ Groceries Dispatched & En Route!
+
+Your items are packed and on their way:
+
+* **Tracking ID:** `{track_id}`
+* **Service:** **Flipkart Minutes / Quick Commerce**
+* **Delivery Partner:** **Amit Sharma** (⭐ 4.9 • 1,840 deliveries)
+* **Cart Items:** 2L Amul Gold Milk, Whole Wheat Bread, 6 Farm Eggs
+* **Total Paid:** **₹188 INR**
+* **Estimated Arrival:** **In 10 Minutes**
+* **Live Telemetry:** Courier has departed Indiranagar Dark-Store Hub (0.9 km away)."""
+            }
+
+        # Check if user did NOT specify items:
+        has_items = any(w in lower for w in ["milk", "bread", "egg", "fruit", "vegetable", "veggie", "apple", "banana", "snack", "maggi", "curd", "paneer", "chips", "coke", "2l"])
+        if not has_items and ("order grocery" in lower or "order groceries" in lower or "buy grocery" in lower or "10-min" in lower or "grocery delivery" in lower or "zepto vs blinkit" in lower):
+            return {
+                "intent": "grocery_item_prompt",
+                "thought": "User requested grocery delivery without specifying an item list. Prompting operator for items to compare across Blinkit, Zepto, and Flipkart Minutes.",
+                "content": """### 🛒 What Items Would You Like to Order?
+
+Please specify what groceries you need so I can compare live prices and instant delivery speeds across **Blinkit**, **Zepto**, and **Flipkart Minutes**:
+
+👇 **Or select one of our 1-click popular essential baskets:**"""
+            }
+
+        else:
+            return {
+                "intent": "grocery_comparison_with_selection",
+                "thought": "Checked live dark-store inventory, pricing, and courier availability for items across Zepto, Blinkit, and Flipkart Minutes. Identified lowest price deal on Flipkart Minutes and fastest ETA on Zepto.",
+                "content": """### ⚡ 10-Minute Quick Commerce Comparison: Blinkit vs Zepto vs Flipkart Minutes
+
+I checked live store stock and delivery ETAs for **2L Milk + Whole Wheat Bread + 6 Eggs**:
+
+| Instant Service | Delivery Speed | Basket Total | Delivery Fee | Final Cost | Key Highlights |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Flipkart Minutes** | **11 mins** | ₹188 | **₹0 (Free)** | **₹188 INR** | 🏆 **Lowest Price (Saves ₹17)** |
+| **Zepto** | **9 mins** | ₹195 | **₹0 (Free)** | **₹195 INR** | ⚡ **Fastest Arrival (9m)** |
+| **Blinkit** | **12 mins** | ₹205 | ₹10 | **₹215 INR** | Wide inventory selection |
+
+👇 **Select which quick-commerce service you want to order from:**"""
+            }
+
+    # -----------------------------------------------------
+    # 3. LAPTOP E-COMMERCE INTENTS
+    # -----------------------------------------------------
+    elif (any(w in lower for w in ["laptop", "croma"]) or (("flipkart" in lower or "amazon" in lower) and not any(w in lower for w in ["minute", "grocery", "groceries", "milk", "bread", "egg", "cab", "uber"]))) and not any(w in lower for w in ["grocery", "groceries", "milk", "bread", "egg", "blinkit", "zepto", "minute"]):
         if "buy on flipkart" in lower or "select flipkart" in lower:
             return {
                 "intent": "laptop_order_interrupt",
@@ -586,113 +694,7 @@ I located the highest-rated rooftop Italian dining venue in Indiranagar:
 > 🛡️ **HITL Safety Intercept**: Please click confirm below to reserve the table."""
         }
 
-    # -----------------------------------------------------
-    # 5. QUICK GROCERY DELIVERY (BLINKIT VS ZEPTO VS FLIPKART MINUTES)
-    # -----------------------------------------------------
-    elif any(w in lower for w in ["grocery", "groceries", "milk", "bread", "egg", "blinkit", "zepto", "flipkart minute", "flipkart minutes", "minutes", "instamart"]):
-        if "select flipkart minutes" in lower or "select flipkart minute" in lower:
-            return {
-                "intent": "grocery_order_interrupt",
-                "store": "Flipkart Minutes",
-                "price": 188,
-                "eta": "11 mins",
-                "thought": "User chose Flipkart Minutes. Pre-filled cart (2L Milk, Whole Wheat Bread, 6 Farm Eggs), applied instant deal coupon, and paused at checkout authorization.",
-                "content": """### 🔒 Transaction Boundary: Confirm Flipkart Minutes 10-Min Delivery
 
-The agent prepared your order on **Flipkart Minutes** and paused before payment:
-
-* **Cart:** 2L Amul Gold Milk (₹126) + Whole Wheat Bread (₹40) + 6 Farm Eggs (₹22 discounted)
-* **Service:** **Flipkart Minutes Instant Quick Commerce (11 mins delivery)**
-* **Delivery Destination:** Indiranagar Flat 302, Bangalore — 560038
-* **Item Total:** ₹188 INR *(Lowest price across all 3 quick-commerce platforms)*
-* **Delivery Fee:** **₹0 (Free First 3 Orders)**
-* **Total Payable:** **₹188 INR** *(Saves ₹27 compared to retail)*
-
-> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your Flipkart Minutes delivery."""
-            }
-
-        elif "select zepto" in lower:
-            return {
-                "intent": "grocery_order_interrupt",
-                "store": "Zepto",
-                "price": 195,
-                "eta": "9 mins",
-                "thought": "User chose Zepto. Built grocery cart (2L Milk, Brown Bread, 6 Eggs), applied free delivery coupon, and paused at checkout authorization.",
-                "content": """### 🔒 Transaction Boundary: Confirm Zepto 10-Min Delivery
-
-* **Cart:** 2L Amul Gold Milk (₹130) + Whole Wheat Bread (₹42) + 6 Farm Eggs (₹43)
-* **Service:** **Zepto Quick Commerce (9 mins delivery)**
-* **Delivery Destination:** Indiranagar Flat 302, Bangalore
-* **Total Payable:** **₹195 INR** *(Free delivery applied • Fastest arrival)*
-
-> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your 9-minute Zepto grocery delivery."""
-            }
-
-        elif "select blinkit" in lower:
-            return {
-                "intent": "grocery_order_interrupt",
-                "store": "Blinkit",
-                "price": 205,
-                "eta": "12 mins",
-                "thought": "User chose Blinkit. Prepared cart and paused at checkout authorization.",
-                "content": """### 🔒 Transaction Boundary: Confirm Blinkit Delivery
-
-* **Cart:** 2L Amul Gold Milk (₹132) + Whole Wheat Bread (₹45) + 6 Farm Eggs (₹48)
-* **Service:** **Blinkit Instant Delivery (12 mins)**
-* **Delivery Destination:** Indiranagar Flat 302, Bangalore
-* **Total Payable:** **₹205 INR** *(Includes ₹10 night delivery handling)*
-
-> 🛡️ **HITL Safety Intercept**: Click authorize below to dispatch your delivery."""
-            }
-
-        elif "authorize grocery" in lower or ("confirm" in lower and any(w in lower for w in ["zepto", "blinkit", "flipkart", "grocery", "milk", "bread", "188", "195", "205"])):
-            track_id = f"FKM-{random.randint(10000, 99999)}"
-            return {
-                "intent": "grocery_dispatched",
-                "track_id": track_id,
-                "thought": "Operator authorized grocery checkout. Dispatched dark-store packing queue, charged payment, and initiated live courier tracking.",
-                "content": f"""### ⚡ Groceries Dispatched & En Route!
-
-Your items are packed and on their way:
-
-* **Tracking ID:** `{track_id}`
-* **Service:** **Flipkart Minutes / Quick Commerce**
-* **Delivery Partner:** **Amit Sharma** (⭐ 4.9 • 1,840 deliveries)
-* **Cart Items:** 2L Amul Gold Milk, Whole Wheat Bread, 6 Farm Eggs
-* **Total Paid:** **₹188 INR**
-* **Estimated Arrival:** **In 10 Minutes**
-* **Live Telemetry:** Courier has departed Indiranagar Dark-Store Hub (0.9 km away)."""
-            }
-
-        # Check if user did NOT specify items:
-        has_items = any(w in lower for w in ["milk", "bread", "egg", "fruit", "vegetable", "veggie", "apple", "banana", "snack", "maggi", "curd", "paneer", "chips", "coke", "2l"])
-        if not has_items and ("order grocery" in lower or "order groceries" in lower or "buy grocery" in lower or "10-min" in lower or "grocery delivery" in lower or "zepto vs blinkit" in lower):
-            return {
-                "intent": "grocery_item_prompt",
-                "thought": "User requested grocery delivery without specifying an item list. Prompting operator for items to compare across Blinkit, Zepto, and Flipkart Minutes.",
-                "content": """### 🛒 What Items Would You Like to Order?
-
-Please specify what groceries you need so I can compare live prices and instant delivery speeds across **Blinkit**, **Zepto**, and **Flipkart Minutes**:
-
-👇 **Or select one of our 1-click popular essential baskets:**"""
-            }
-
-        else:
-            return {
-                "intent": "grocery_comparison_with_selection",
-                "thought": "Checked live dark-store inventory, pricing, and courier availability for items across Zepto, Blinkit, and Flipkart Minutes. Identified lowest price deal on Flipkart Minutes and fastest ETA on Zepto.",
-                "content": """### ⚡ 10-Minute Quick Commerce Comparison: Blinkit vs Zepto vs Flipkart Minutes
-
-I checked live store stock and delivery ETAs for **2L Milk + Whole Wheat Bread + 6 Eggs**:
-
-| Instant Service | Delivery Speed | Basket Total | Delivery Fee | Final Cost | Key Highlights |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Flipkart Minutes** | **11 mins** | ₹188 | **₹0 (Free)** | **₹188 INR** | 🏆 **Lowest Price (Saves ₹17)** |
-| **Zepto** | **9 mins** | ₹195 | **₹0 (Free)** | **₹195 INR** | ⚡ **Fastest Arrival (9m)** |
-| **Blinkit** | **12 mins** | ₹205 | ₹10 | **₹215 INR** | Wide inventory selection |
-
-👇 **Select which quick-commerce service you want to order from:**"""
-            }
 
     # -----------------------------------------------------
     # 6. BREAKING NEWS INTENT
