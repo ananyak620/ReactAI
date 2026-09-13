@@ -35,7 +35,7 @@ custom_css = f"""
 .stApp {{
     background: linear-gradient(180deg, rgba(4, 6, 10, 0.65) 0%, rgba(6, 9, 16, 0.72) 50%, rgba(4, 6, 10, 0.88) 100%),
                 url("data:image/jpeg;base64,{bg_base64}") !important;
-    background-size: 100% 100% !important;
+    background-size: cover !important;
     background-position: center top !important;
     background-repeat: no-repeat !important;
     background-attachment: fixed !important;
@@ -43,34 +43,54 @@ custom_css = f"""
     font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
 }}
 
-/* Clean up Streamlit default excessive blank header space */
-.block-container {{
-    padding-top: 2.2rem !important;
-    padding-bottom: 5.5rem !important;
+/* Streamlit Header Bar Fix */
+header[data-testid="stHeader"] {{
+    background: transparent !important;
+    height: 3rem !important;
 }}
 
-/* Sidebar styling */
+/* Main Content Container - Balanced Fit & Full Viewport Clearance */
+.main .block-container {{
+    max-width: 1100px !important;
+    padding-top: 3.8rem !important;
+    padding-bottom: 10rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}}
+
+/* Sidebar styling & padding fix so title isn't cropped */
 section[data-testid="stSidebar"] {{
     background-color: rgba(15, 23, 42, 0.95) !important;
     backdrop-filter: blur(16px);
     border-right: 1px solid rgba(255, 255, 255, 0.08);
 }}
+section[data-testid="stSidebar"] .block-container {{
+    padding-top: 3.5rem !important;
+    padding-bottom: 2rem !important;
+}}
 
 /* Chat container styling */
 div[data-testid="stChatMessage"] {{
-    background: rgba(15, 23, 42, 0.75) !important;
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 12px !important;
-    padding: 1.25rem !important;
-    margin-bottom: 1rem !important;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
+    background: rgba(15, 23, 42, 0.82) !important;
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 14px !important;
+    padding: 1.4rem 1.6rem !important;
+    margin-bottom: 1.25rem !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
 }}
 
 /* User chat message */
 div[data-testid="stChatMessage"]:nth-child(even) {{
-    background: rgba(22, 35, 58, 0.85) !important;
-    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    background: rgba(22, 35, 58, 0.88) !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}}
+
+/* Chat input bottom bar styling - ensure it doesn't overlap text */
+div[data-testid="stBottom"] {{
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(10, 15, 26, 0.85) 30%, rgba(10, 15, 26, 0.96) 100%) !important;
+    backdrop-filter: blur(12px) !important;
+    padding-bottom: 1.5rem !important;
 }}
 
 /* HITL Boundary Alert Box */
