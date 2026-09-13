@@ -88,7 +88,10 @@ div[data-testid="stChatMessage"]:nth-child(even) {{
 
 /* Bottom bar completely transparent so wallpaper flows seamlessly to bottom edge */
 div[data-testid="stBottom"],
-div[data-testid="stBottom"] > div {{
+div[data-testid="stBottom"] > div,
+div[data-testid="stBottom"] > div > div,
+div[data-testid="stChatFloatingInputContainer"],
+div[data-testid="stChatInputContainer"] {{
     background: transparent !important;
     background-color: transparent !important;
     box-shadow: none !important;
@@ -97,12 +100,12 @@ div[data-testid="stBottom"] > div {{
 
 /* Floating Glassmorphic Chat Input */
 div[data-testid="stChatInput"] {{
-    background: rgba(15, 23, 42, 0.85) !important;
+    background: rgba(15, 23, 42, 0.88) !important;
     backdrop-filter: blur(16px) !important;
     border: 1px solid rgba(56, 189, 248, 0.35) !important;
     border-radius: 14px !important;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.75rem !important;
 }}
 
 div[data-testid="stChatInput"]:focus-within {{
@@ -111,7 +114,8 @@ div[data-testid="stChatInput"]:focus-within {{
 }}
 
 /* Hide default Streamlit footer */
-footer {{
+footer,
+div[data-testid="stBottom"] footer {{
     display: none !important;
     visibility: hidden !important;
 }}

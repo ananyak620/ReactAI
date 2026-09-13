@@ -3,7 +3,7 @@
 <div align="center">
 
 [![Watch Live Demo Video](https://img.shields.io/badge/▶_Watch_Demo_Video-Streamable-FF1361?style=for-the-badge&logoColor=white)](https://streamable.com/dspf3w?src=player-page-share)
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ananyak620-reactai-streamlit-app-ilfzp8.streamlit.app/)
 
 [![License](https://img.shields.io/badge/License-MIT-emerald.svg?style=flat-square)](#-license)
 ![Python](https://img.shields.io/badge/Python-3.10+-3776ab.svg?style=flat-square)
@@ -14,7 +14,7 @@
 
 **An enterprise-grade autonomous concierge ReAct (Reason + Act) agent that executes 95% of tedious web search, multi-portal price comparison, constraint validation, and form-filling labor, while enforcing deterministic Human-in-the-Loop (HITL) checkpoints at irreversible payment & dispatch boundaries.**
 
-[🎥 **Watch Demo Video**](https://streamable.com/dspf3w?src=player-page-share) • [🚀 **Launch Live Streamlit App**](https://share.streamlit.io/) • [✨ **GitHub Repo**](https://github.com/ananyak620/ReactAI) • [📸 **Screenshots Showcase**](#-visual-showcase--live-screenshots) • [📖 **Everyday Scenarios**](#-everyday-autonomous-concierge-scenarios)
+[🎥 **Watch Demo Video**](https://streamable.com/dspf3w?src=player-page-share) • [🚀 **Launch Live App**](https://ananyak620-reactai-streamlit-app-ilfzp8.streamlit.app/) • [✨ **GitHub Repo**](https://github.com/ananyak620/ReactAI) • [📸 **Screenshots Showcase**](#-visual-showcase--live-screenshots) • [📖 **Everyday Scenarios**](#-everyday-autonomous-concierge-scenarios)
 
 </div>
 
@@ -30,7 +30,7 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 👉 **[Click Here to Watch the Full Video Walkthrough on Streamable](https://streamable.com/dspf3w?src=player-page-share)** 👈
 
-*Demonstrates multi-constraint flight search, StateGraph execution freeze at the payment step, human authorization click, signed PNR generation, and multi-portal laptop price comparison.*
+*Demonstrates multi-constraint flight search, StateGraph execution freeze at the payment step, human authorization click, signed PNR generation, multi-portal laptop price comparison, and live cab tracking.*
 
 </div>
 
@@ -47,7 +47,25 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ---
 
-### 2. ✈️ Transaction Authorized & E-Ticket PNR Minted
+### 2. 🚗 Cab Booking with Google Maps Route & Live Driver GPS Telemetry
+> Prompts for missing pickup/drop locations, calculates realistic travel times & toll details via Google Maps route intelligence, and displays live driver GPS telemetry (`Indiranagar 100ft Rd`, 1.8 km away) with driver details and trip OTP upon operator dispatch.
+
+<div align="center">
+  <img src="assets/screenshots/cab_booking_gps_telemetry.png" alt="Cab Booking with Google Maps Route and GPS Telemetry" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(56, 189, 248, 0.35);" />
+</div>
+
+---
+
+### 3. ⚡ 3-Way Instant Quick Commerce Grocery Comparison
+> When asked to order essentials, the agent prompts for an item list with 1-click curated baskets, then executes an instant 3-way price and delivery ETA comparison across **Flipkart Minutes, Zepto, and Blinkit** with 1-click store selection and checkout gating.
+
+<div align="center">
+  <img src="assets/screenshots/quick_commerce_groceries.png" alt="Quick Commerce Grocery Comparison across Flipkart Minutes, Zepto, and Blinkit" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.35);" />
+</div>
+
+---
+
+### 4. ✈️ Transaction Authorized & E-Ticket PNR Minted
 > Upon verified operator approval, the agent executes the commit tool, charges the authorized amount, mints an authentic PNR reference code (`6E-168HT`), and renders an instant signed E-ticket voucher for download.
 
 <div align="center">
@@ -56,7 +74,7 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ---
 
-### 3. 💻 Multi-Store Hardware Price & Spec Comparison
+### 5. 💻 Multi-Store Hardware Price & Spec Comparison
 > Scrapes live product listings across **Flipkart, Amazon India, and Croma**, filtering by RAM, SSD, and budget limits to mathematically determine the optimal deal, and provides 1-click store selection buttons.
 
 <div align="center">
@@ -65,7 +83,7 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ---
 
-### 4. 💻 Full-Stack React + Vite Glassmorphic Enterprise UI
+### 6. 💻 Full-Stack React + Vite Glassmorphic Enterprise UI
 > Dual-deployment architecture: Includes a standalone Python Streamlit app for cloud deployment alongside a high-throughput Node.js + React production workspace.
 
 <div align="center">
@@ -170,7 +188,9 @@ graph TD
 
 ## ☁️ Streamlit Community Cloud Deployment Guide
 
-You can deploy this application directly to **Streamlit Community Cloud** in under 2 minutes:
+> 🚀 **Live Production Instance:** Test the running application directly at **[https://ananyak620-reactai-streamlit-app-ilfzp8.streamlit.app/](https://ananyak620-reactai-streamlit-app-ilfzp8.streamlit.app/)**
+
+You can also deploy your own fork directly to **Streamlit Community Cloud** in under 2 minutes:
 
 1. **Sign In to Streamlit Cloud:**
    * Go to [share.streamlit.io](https://share.streamlit.io/) and authenticate with your GitHub account.
