@@ -16,7 +16,7 @@ export async function processConversationalAgentMessage({ message, history = [],
   const lower = text.toLowerCase();
 
   // Initialize Anakin.ai Gateway with provided or env credentials
-  const anakin = new AnakinClient(config.anakinApiKey, config.anakinAppId);
+  const anakin = new AnakinClient(config.anakinApiKey || process.env.ANAKIN_API_KEY || '', config.anakinAppId || process.env.ANAKIN_APP_ID || '');
 
   // Determine domain category for Planner (using full conversational context for follow-up/authorization messages)
   const fullContextLower = (history.map(h => h.content).join(' ') + ' ' + text).toLowerCase();
