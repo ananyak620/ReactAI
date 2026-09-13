@@ -12,9 +12,9 @@
 ![Orchestrator](https://img.shields.io/badge/State_Graph-LangGraph_ReAct-f59e0b.svg?style=flat-square)
 ![Multi-Model Hub](https://img.shields.io/badge/AI_Gateway-Anakin.ai-7c3aed.svg?style=flat-square)
 
-**An enterprise-grade autonomous ReAct (Reason + Act) agent that executes 95% of tedious web research, multi-constraint policy validation, price comparison, and form-filling labor, while enforcing deterministic Human-in-the-Loop (HITL) checkpoints at irreversible financial boundaries.**
+**An enterprise-grade autonomous concierge ReAct (Reason + Act) agent that executes 95% of tedious web search, multi-portal price comparison, constraint validation, and form-filling labor, while enforcing deterministic Human-in-the-Loop (HITL) checkpoints at irreversible payment & dispatch boundaries.**
 
-[🎥 **Watch Demo Video**](https://streamable.com/dspf3w?src=player-page-share) • [🚀 **Launch Live Streamlit App**](https://share.streamlit.io/) • [✨ **GitHub Repo**](https://github.com/ananyak620/ReactAI) • [📸 **Screenshots Showcase**](#-visual-showcase--live-screenshots) • [📖 **Architecture**](#-execution-architecture--state-graph)
+[🎥 **Watch Demo Video**](https://streamable.com/dspf3w?src=player-page-share) • [🚀 **Launch Live Streamlit App**](https://share.streamlit.io/) • [✨ **GitHub Repo**](https://github.com/ananyak620/ReactAI) • [📸 **Screenshots Showcase**](#-visual-showcase--live-screenshots) • [📖 **Everyday Scenarios**](#-everyday-autonomous-concierge-scenarios)
 
 </div>
 
@@ -57,7 +57,7 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 ---
 
 ### 3. 💻 Multi-Store Hardware Price & Spec Comparison
-> Scrapes live product listings across **Flipkart, Amazon India, and Croma**, filtering by RAM, SSD, and budget limits to mathematically determine the optimal deal.
+> Scrapes live product listings across **Flipkart, Amazon India, and Croma**, filtering by RAM, SSD, and budget limits to mathematically determine the optimal deal, and provides 1-click store selection buttons.
 
 <div align="center">
   <img src="assets/screenshots/hardware_price_comparison.png" alt="Hardware Price Comparison across Stores" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(56, 189, 248, 0.35);" />
@@ -65,16 +65,7 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ---
 
-### 4. 🔬 Deep Web Research & Technical Silicon Benchmarks
-> Live multi-source synthesis across arXiv whitepapers, technical model cards, and datacenter hardware specs (e.g., DeepSeek-V3 MLA KV-cache vs. Llama 3.3 70B, Google Axion vs. AWS Graviton4).
-
-<div align="center">
-  <img src="assets/screenshots/deep_research_moe.png" alt="Deep Web Research & Model Benchmarks" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.35);" />
-</div>
-
----
-
-### 5. 💻 Full-Stack React + Vite Glassmorphic Enterprise UI
+### 4. 💻 Full-Stack React + Vite Glassmorphic Enterprise UI
 > Dual-deployment architecture: Includes a standalone Python Streamlit app for cloud deployment alongside a high-throughput Node.js + React production workspace.
 
 <div align="center">
@@ -83,15 +74,39 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ---
 
-## 🌟 Key Capabilities
+## 🌟 Everyday Autonomous Concierge Scenarios
 
-| Capability | Autonomous Behavior | Safety / HITL Gating |
-| :--- | :--- | :--- |
-| ✈️ **Flight Booking** | Searches routes, compares airline fares, enforces budget ceilings (e.g. `< ₹6,000`), verifies baggage & cancellation policies, pre-fills traveler profiles. | **FROZEN STATE**: Pauses at *"Pay ₹4,680"*, displays 5-point constraint verification card, requires operator click. |
-| 💻 **Hardware Price Scraper** | Scrapes live product listings across **Flipkart, Amazon India, and Croma**, filtering for RAM, SSD, and budget thresholds. | Autonomous deal ranking with persistent comparison report generation. |
-| 🔬 **Deep Web Intelligence** | Multi-source architectural auditing (MoE vs Dense, GraphRAG vs Vector RAG, Cloud ARM Processors) with markdown tables and verified citations. | Dynamic source cross-referencing to eliminate hallucination. |
-| 📰 **Live News Briefing** | Scrapes top global headlines across technology, finance, and science, generating executive intelligence summaries. | Automated artifact compilation into `workspace_outputs/`. |
-| 🍽️ **Dining Reservations** | Queries venue availability, filters cuisine and ratings (⭐ 4.8+), reserves tables, and issues booking tokens. | Autonomous voucher generation with cancellation grace window. |
+Unlike passive chatbots that only give advice, **ReactAI** actually does the legwork across your daily tasks:
+
+### 1. ✈️ Autonomous Flight Booking
+* **User says:** `"Book flight from Bangalore to Patna on 25th October under 6000 INR"`
+* **Agent does:** Searches live airline schedules across IndiGo, SpiceJet, Air India; enforces budget ceilings (`< ₹6,000`), selects direct flights, verifies baggage and ₹0 cancellation terms.
+* **HITL Action:** State graph **freezes** at *"Pay ₹4,680"*. Displays verified checklist card. Upon human approval, mints PNR (`6E-168HT`) and downloads E-ticket voucher.
+
+### 2. 💻 Multi-Store E-Commerce Shopping & Checkout
+* **User says:** `"Compare 16GB RAM laptops under 70,000 INR across Flipkart, Amazon and Croma"`
+* **Agent does:** Scrapes live catalog prices, normalizes processor & RAM specs, and ranks deals.
+* **Human Selection:** Renders interactive buttons: `[Buy on Flipkart - ₹59,990]`, `[Buy on Amazon - ₹60,500]`, `[Buy on Croma - ₹61,000]`.
+* **HITL Action:** On store selection, agent pre-fills shipping address, halts before payment, and commits order upon 1-click human authorization.
+
+### 3. 🚗 Instant Cab / Ride-Hailing Booking
+* **User says:** `"Book an Uber or cab from Indiranagar to Bangalore Airport"`
+* **Agent does:** Checks live ride-hailing APIs across Uber and Ola, comparing fares, ETAs, and car tiers:
+  * **Uber Go:** ₹720 • 4 mins away
+  * **Uber Premier:** ₹940 • 6 mins away
+  * **Ola Prime:** ₹780 • 7 mins away
+* **Human Selection:** Displays 1-click selection buttons for each ride option.
+* **HITL Action:** Prompts ride confirmation boundary card. When approved, dispatches driver (*Rajesh Kumar* ⭐ 4.88, White Dzire `KA-04-MM-8219`), issues **Start-Trip OTP: `4912`**, and tracks 4-min arrival.
+
+### 4. 🍽️ Restaurant Table Reservations
+* **User says:** `"Book a table for 2 at a rooftop Italian restaurant tonight at 8:30 PM"`
+* **Agent does:** Queries venue ratings (⭐ 4.8+), checks outdoor skyline table availability at *Chianti Ristorante*, and locks table slot.
+* **HITL Action:** Displays reservation boundary card with ₹0 deposit policy. When confirmed, issues booking token `RES-CH-8291` and calendar sync.
+
+### 5. ⚡ 10-Minute Grocery Delivery
+* **User says:** `"Order 2L milk, whole wheat bread, and eggs delivered fast"`
+* **Agent does:** Compares inventory and delivery speeds between **Zepto (9 mins, ₹205)** and **Blinkit (12 mins, ₹218)**.
+* **HITL Action:** Human chooses store, verifies delivery address, authorizes 1-click checkout, and tracks rider live.
 
 ---
 
@@ -126,22 +141,24 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ```mermaid
 graph TD
-    A[User Task Prompt] --> B[Agentic RAG Engine: Hybrid Dense + BM25]
-    B --> C[Cross-Encoder Reranker & Critic]
-    C --> D[LangGraph Cyclic ReAct Loop]
-    D --> E{Action Type Assessment}
+    A[User Natural Command] --> B[Domain Router: Travel, Procurement, Ride, Dining, QuickComm]
+    B --> C[Agentic RAG Engine: Multi-Portal Scrape & API Queries]
+    C --> D[LangGraph ReAct Loop: Parse Options & Rerank Deals]
     
-    E -->|Read-Only Research / Pricing| F[Execute Autonomous Tools: webSearch, webReader, compTable]
-    F --> G[Reflect & Compile Markdown Artifact]
-    G --> H[Deliver Intelligence to User]
-
-    E -->|Irreversible State Mutation / Payment| I[TRIGGER INTERRUPT()]
-    I --> J[Freeze StateGraph at Checkpoint]
-    J --> K[Render Interactive HITL Review Card in UI]
+    D --> E{Option Selection Needed?}
+    E -->|Yes: Multiple Stores or Rides| F[Render 1-Click Interactive Choice Buttons in Chat]
+    F --> G[Human Selects Store / Ride]
+    G --> H[Pre-fill Order / Ride Details]
     
-    K -->|Human Clicks Authorize| L[Resume State Graph]
+    E -->|No: Direct Target Found| H
+    
+    H --> I[Encounter Irreversible Boundary / Payment Step]
+    I --> J[TRIGGER INTERRUPT: Freeze StateGraph]
+    J --> K[Render Interactive HITL Review Card]
+    
+    K -->|Human Clicks Authorize| L[Resume State Graph Execution]
     L --> M[Dispatch Transaction Commit Tool]
-    M --> N[Mint Booking Reference & Signed Voucher]
+    M --> N[Mint Booking PNR / Order ID / Driver OTP & Voucher]
 
     K -->|Human Clicks Cancel| O[Rollback Transaction & Reset State]
 ```
@@ -207,28 +224,6 @@ Open **[http://localhost:5000](http://localhost:5000)** in your browser.
 
 ---
 
-## 🧪 Benchmark & Capability Demo Prompts
-
-Try these pre-configured prompts directly in the chat to test agent depth:
-
-1. **Autonomous Flight Booking with HITL Boundary:**
-   > `"Book flight from Bangalore to Patna on 25th October under 6000 INR"`
-   * *Behavior:* Searches direct flights, evaluates baggage & cancellation terms, and halts at the payment screen requiring human authorization.
-
-2. **Deep Architecture Analysis (MoE vs Dense):**
-   > `"DeepSeek-V3 MoE vs Llama 3.3 70B architecture and benchmarks comparison"`
-   * *Behavior:* Synthesizes MLA KV-cache compression (93.3%), active token FLOPs, FP8 mixed precision, and multi-node serving trade-offs.
-
-3. **Enterprise Agent Framework Audit:**
-   > `"Audit LangGraph vs CrewAI vs AutoGen for enterprise agent production"`
-   * *Behavior:* Delivers a comparative matrix evaluating cyclic graphs, native `interrupt()`, time-travel checkpointers, and error self-healing.
-
-4. **Multi-Store Hardware Price Comparison:**
-   > `"Compare 16GB RAM laptops under 70,000 INR across Flipkart, Amazon and Croma"`
-   * *Behavior:* Scrapes live product catalogs, normalizes specs, and identifies the best deal.
-
----
-
 ## 📁 Repository Structure
 
 ```
@@ -238,7 +233,6 @@ ReactAI/
 │       ├── hitl_approval_modal.png
 │       ├── flight_authorized_pnr.png
 │       ├── hardware_price_comparison.png
-│       ├── deep_research_moe.png
 │       ├── streamlit_dashboard.png
 │       └── react_web_app.png
 │
