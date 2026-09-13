@@ -206,86 +206,113 @@ def process_agent_request(query, history=None):
     lower = query.lower()
     
     # -----------------------------------------------------
-    # 1. FLIGHT BOOKING INTENT WITH HITL BOUNDARY
+    # 1. CAB / UBER / RIDE BOOKING INTENT (PRIORITIZED)
     # -----------------------------------------------------
-    if any(w in lower for w in ["flight", "fly", "patna", "bangalore"]) and not any(w in lower for w in ["authorize", "pay now", "confirm"]):
-        flight_data = {
-            "airline": "SpiceJet",
-            "flightNumber": "SG-8721",
-            "origin": "Bangalore (BLR)",
-            "destination": "Patna (PAT)",
-            "departure": "06:15 AM",
-            "arrival": "08:45 AM",
-            "stops": "Non-stop",
-            "duration": "2h 30m",
-            "price": 4680,
-            "budget": 6000,
-            "baggage": "15kg Check-in + 7kg Cabin Included",
-            "cancellation": "Free cancellation within 24h"
-        }
-        return {
-            "intent": "hitl_transaction_interrupt",
-            "flight": flight_data,
-            "thought": "Searched live airline schedules, evaluated 4 flight combinations, validated strict budget (< ₹6,000) and baggage constraints. Reached high-risk financial boundary: Next Action = 'Submit Payment (₹4,680)'. Froze execution state to require human authorization.",
-            "content": f"""### ⏸️ Human-in-the-Loop Transaction Boundary Enforced
+    if any(w in lower for w in ["uber", "ola", "cab", "taxi", "ride"]):
+        if "select uber go" in lower:
+            return {
+                "intent": "cab_order_interrupt",
+                "ride": "Uber Go",
+                "price": 720,
+                "eta": "4 mins",
+                "thought": "User chose Uber Go. Verified pickup GPS coordinates, calculated route distance (38 km to Airport), and paused at dispatch authorization.",
+                "content": """### 🔒 Transaction Boundary: Confirm Uber Go Booking
 
-The autonomous agent completed **95% of data retrieval, constraint validation, and form entry**:
+The agent configured your ride and halted before dispatching the driver:
 
-* **Route:** {flight_data['origin']} ➔ {flight_data['destination']} ({flight_data['stops']}, {flight_data['duration']})
-* **Flight:** **{flight_data['airline']} ({flight_data['flightNumber']})**
-* **Departure:** {flight_data['departure']} on **25th October 2026**
-* **Total Transaction Amount:** **₹{flight_data['price']:,} INR** *(Saves ₹{flight_data['budget'] - flight_data['price']:,} under your ₹{flight_data['budget']:,} budget)*
-* **Included Add-ons:** {flight_data['baggage']} • {flight_data['cancellation']}
+* **Ride Category:** **Uber Go (Compact Sedan)**
+* **Pickup:** Indiranagar 100ft Road, Bangalore
+* **Destination:** Kempegowda International Airport (BLR) — Terminal 1
+* **Estimated Trip Time:** 52 mins (38.4 km via Bellary Rd)
+* **Trip Fare:** **₹720 INR** *(No surge pricing active)*
+* **Payment Mode:** Auto-debit on trip completion (UPI / Card)
 
-> 🛡️ **HITL Safety Intercept Triggered**: The agent **MUST NOT** click "Pay Now" autonomously. State graph is **FROZEN**. Please review the parameters and authorize payment below."""
-        }
-    
+> 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch the nearest driver."""
+            }
+
+        elif "select uber premier" in lower:
+            return {
+                "intent": "cab_order_interrupt",
+                "ride": "Uber Premier",
+                "price": 940,
+                "eta": "6 mins",
+                "thought": "User selected Uber Premier. Configured luxury sedan pickup, locked in fixed fare, and paused at dispatch authorization.",
+                "content": """### 🔒 Transaction Boundary: Confirm Uber Premier Booking
+
+* **Ride Category:** **Uber Premier (Executive Sedan / Honda City)**
+* **Pickup:** Indiranagar 100ft Road, Bangalore
+* **Destination:** Kempegowda International Airport (BLR) — Terminal 1
+* **Trip Fare:** **₹940 INR** *(Top-rated drivers only, extra legroom)*
+* **Driver ETA:** 6 mins away
+
+> 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch your Premier cab."""
+            }
+
+        elif "select ola prime" in lower:
+            return {
+                "intent": "cab_order_interrupt",
+                "ride": "Ola Prime Sedan",
+                "price": 780,
+                "eta": "7 mins",
+                "thought": "User selected Ola Prime. Loaded Ola API credentials, checked car availability, and paused for human confirmation.",
+                "content": """### 🔒 Transaction Boundary: Confirm Ola Prime Booking
+
+* **Ride Category:** **Ola Prime Sedan (Hyundai Aura / Dzire)**
+* **Pickup:** Indiranagar 100ft Road, Bangalore
+* **Destination:** Kempegowda International Airport (BLR)
+* **Trip Fare:** **₹780 INR** *(Free in-cab WiFi included)*
+* **Driver ETA:** 7 mins away
+
+> 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch your Ola cab."""
+            }
+
+        elif any(w in lower for w in ["authorize", "confirm", "dispatch"]) and any(w in lower for w in ["cab", "ride", "uber", "ola", "720", "940", "780"]):
+            otp = random.randint(1000, 9999)
+            return {
+                "intent": "cab_dispatched",
+                "otp": otp,
+                "thought": "Human operator authorized ride. Dispatched Uber API dispatch hook, assigned nearest 4.88★ driver, and minted start-trip OTP.",
+                "content": f"""### 🚖 Cab Confirmed & Driver En Route!
+
+Your driver has accepted the trip and is heading to your pickup location:
+
+* **Driver:** **Rajesh Kumar** (⭐ 4.88 • 2,410+ trips)
+* **Vehicle:** White Suzuki Dzire (`KA-04-MM-8219`)
+* **Start-Trip OTP / PIN:** `{otp}` *(Share with driver before departure)*
+* **Driver ETA:** **Arriving in 4 minutes**
+* **Pickup Location:** Indiranagar 100ft Rd (Opp. Metro Pillar 124)
+* **Estimated Fare:** ₹720 INR"""
+            }
+
+        else:
+            return {
+                "intent": "cab_comparison_with_selection",
+                "thought": "Queried live ride-hailing APIs across Uber and Ola for pickup at Indiranagar to Kempegowda International Airport. Compared fares, ETAs, and car classes.",
+                "content": """### 🚗 Live Cab & Ride-Hailing Comparison
+
+I checked live fares and nearby driver availability for **Indiranagar ➔ BLR Airport (38 km)**:
+
+| Ride Option | Vehicle Type | Driver ETA | Fare | Best For |
+| :--- | :--- | :--- | :--- | :--- |
+| **Uber Go** | Suzuki Dzire / WagonR | **4 mins** | **₹720 INR** | 🏆 **Best Value & Fastest ETA** |
+| **Uber Premier** | Honda City / Ciaz | **6 mins** | **₹940 INR** | Top-rated 4.9★ driver & legroom |
+| **Ola Prime Sedan** | Hyundai Aura / Dzire | **7 mins** | **₹780 INR** | In-cab WiFi & entertainment |
+
+👇 **Select which cab you would like me to book:**"""
+            }
+
     # -----------------------------------------------------
-    # 1B. FLIGHT AUTHORIZATION (COMMIT PHASE)
+    # 2. LAPTOP E-COMMERCE INTENTS
     # -----------------------------------------------------
-    elif "authorize flight" in lower or (any(w in lower for w in ["authorize", "pay now", "approve"]) and any(w in lower for w in ["flight", "4680", "4,680"])):
-        pnr = f"6E-{random.randint(100, 999)}{chr(random.randint(65, 90))}{chr(random.randint(65, 90))}"
-        voucher_md = f"""# Electronic Flight Itinerary & Tax Invoice
-* Issued Autonomously by ReactAI Agent
-
-**PNR Reference:** `{pnr}`
-**Passenger:** Valued Traveler
-**Route:** Bangalore (BLR) ➔ Patna (PAT)
-**Flight:** SpiceJet SG-8721 (Non-stop)
-**Date:** 25th October 2026 | Dep: 06:15 AM
-**Status:** CONFIRMED & TICKETED
-**Total Paid:** ₹4,680 INR
-"""
-        return {
-            "intent": "flight_booked",
-            "pnr": pnr,
-            "voucher": voucher_md,
-            "thought": "Human operator authorized payment. Resumed state graph execution, completed payment dispatch tool, minted PNR reference, and compiled signed e-ticket voucher.",
-            "content": f"""### ✈️ Transaction Authorized & Flight Booked!
-
-Your payment authorization of **₹4,680 INR** was verified and processed:
-
-* **PNR / Booking Reference:** `{pnr}`
-* **Airline:** **SpiceJet (SG-8721)**
-* **Route:** BLR ➔ PAT (Non-stop, 2h 30m)
-* **Schedule:** Departs **06:15 AM** | Arrives **08:45 AM**
-* **Total Paid:** **₹4,680 INR**
-* **Baggage:** 15kg Check-in + 7kg Cabin Included
-
-📄 **E-Ticket Voucher:** Signed itinerary compiled and ready for download below."""
-        }
-
-    # -----------------------------------------------------
-    # 2. LAPTOP SELECTION & CHECKOUT PHASE
-    # -----------------------------------------------------
-    elif "buy on flipkart" in lower or "select flipkart" in lower:
-        return {
-            "intent": "laptop_order_interrupt",
-            "store": "Flipkart",
-            "price": 59990,
-            "item": "HP Pavilion 15 (Intel i5 12th Gen, 16GB DDR4, 512GB NVMe SSD)",
-            "thought": "User selected Flipkart. Loaded verified saved shipping address, pre-filled checkout form, and halted before irreversible payment.",
-            "content": """### 🔒 Transaction Boundary: Confirm Order on Flipkart
+    elif any(w in lower for w in ["laptop", "flipkart", "croma"]) or ("amazon" in lower and "cab" not in lower):
+        if "buy on flipkart" in lower or "select flipkart" in lower:
+            return {
+                "intent": "laptop_order_interrupt",
+                "store": "Flipkart",
+                "price": 59990,
+                "item": "HP Pavilion 15 (Intel i5 12th Gen, 16GB DDR4, 512GB NVMe SSD)",
+                "thought": "User selected Flipkart. Loaded verified saved shipping address, pre-filled checkout form, and halted before irreversible payment.",
+                "content": """### 🔒 Transaction Boundary: Confirm Order on Flipkart
 
 The agent selected **HP Pavilion 15** on **Flipkart** and pre-filled your checkout details:
 
@@ -297,16 +324,16 @@ The agent selected **HP Pavilion 15** on **Flipkart** and pre-filled your checko
 * **Warranty:** 1 Year Comprehensive Onsite + 1 Year Accidental Damage Protection
 
 > 🛡️ **HITL Safety Intercept**: Please verify the shipping address and total amount, then click authorize to place the order."""
-        }
+            }
 
-    elif "buy on amazon" in lower or "select amazon" in lower:
-        return {
-            "intent": "laptop_order_interrupt",
-            "store": "Amazon India",
-            "price": 60500,
-            "item": "HP Pavilion 15 (Intel i5 12th Gen, 16GB DDR4, 512GB NVMe SSD)",
-            "thought": "User selected Amazon India. Loaded Amazon Prime account, pre-filled delivery address, and halted at payment step.",
-            "content": """### 🔒 Transaction Boundary: Confirm Order on Amazon
+        elif "buy on amazon" in lower or "select amazon" in lower:
+            return {
+                "intent": "laptop_order_interrupt",
+                "store": "Amazon India",
+                "price": 60500,
+                "item": "HP Pavilion 15 (Intel i5 12th Gen, 16GB DDR4, 512GB NVMe SSD)",
+                "thought": "User selected Amazon India. Loaded Amazon Prime account, pre-filled delivery address, and halted at payment step.",
+                "content": """### 🔒 Transaction Boundary: Confirm Order on Amazon
 
 The agent selected **HP Pavilion 15** on **Amazon India** and pre-filled your checkout details:
 
@@ -317,16 +344,16 @@ The agent selected **HP Pavilion 15** on **Amazon India** and pre-filled your ch
 * **Estimated Arrival:** **Tomorrow by 11:00 AM**
 
 > 🛡️ **HITL Safety Intercept**: Please review and authorize payment to place your Amazon order."""
-        }
+            }
 
-    elif "buy on croma" in lower or "select croma" in lower:
-        return {
-            "intent": "laptop_order_interrupt",
-            "store": "Croma",
-            "price": 61000,
-            "item": "HP Pavilion 15 (Intel i5 12th Gen, 16GB DDR4, 512GB NVMe SSD)",
-            "thought": "User selected Croma. Checked local store pickup vs home delivery, pre-filled billing, and halted at payment.",
-            "content": """### 🔒 Transaction Boundary: Confirm Order on Croma
+        elif "buy on croma" in lower or "select croma" in lower:
+            return {
+                "intent": "laptop_order_interrupt",
+                "store": "Croma",
+                "price": 61000,
+                "item": "HP Pavilion 15 (Intel i5 12th Gen, 16GB DDR4, 512GB NVMe SSD)",
+                "thought": "User selected Croma. Checked local store pickup vs home delivery, pre-filled billing, and halted at payment.",
+                "content": """### 🔒 Transaction Boundary: Confirm Order on Croma
 
 The agent selected **HP Pavilion 15** on **Croma Online** and pre-filled your checkout details:
 
@@ -336,15 +363,15 @@ The agent selected **HP Pavilion 15** on **Croma Online** and pre-filled your ch
 * **Delivery Destination:** Store Pickup (Croma Indiranagar) or Express Home Delivery
 
 > 🛡️ **HITL Safety Intercept**: Please review and authorize payment to place your Croma order."""
-        }
+            }
 
-    elif "authorize laptop order" in lower or ("authorize" in lower and any(w in lower for w in ["laptop", "flipkart", "amazon", "croma", "59990", "60500"])):
-        order_id = f"OD-{random.randint(100000, 999999)}FK"
-        return {
-            "intent": "laptop_order_placed",
-            "order_id": order_id,
-            "thought": "Operator authorized order. Resumed StateGraph, submitted payment method, captured order ID, and saved tax invoice.",
-            "content": f"""### 🛍️ Order Successfully Placed!
+        elif any(w in lower for w in ["authorize", "place order"]) and any(w in lower for w in ["laptop", "flipkart", "amazon", "croma", "59990", "60500"]):
+            order_id = f"OD-{random.randint(100000, 999999)}FK"
+            return {
+                "intent": "laptop_order_placed",
+                "order_id": order_id,
+                "thought": "Operator authorized order. Resumed StateGraph, submitted payment method, captured order ID, and saved tax invoice.",
+                "content": f"""### 🛍️ Order Successfully Placed!
 
 Your purchase has been authorized and dispatched to fulfillment:
 
@@ -355,16 +382,13 @@ Your purchase has been authorized and dispatched to fulfillment:
 * **Status:** **CONFIRMED & PREPARING FOR DISPATCH**
 * **Tracking:** Live courier tracking link generated and sent to your email.
 * **Delivery Slot:** Tomorrow between 11:00 AM – 02:00 PM"""
-        }
+            }
 
-    # -----------------------------------------------------
-    # 2B. LAPTOP COMPARISON INTENT (DISCOVERY PHASE)
-    # -----------------------------------------------------
-    elif any(w in lower for w in ["laptop", "flipkart", "croma"]) and not any(w in lower for w in ["authorize", "buy", "select"]):
-        return {
-            "intent": "product_comparison_with_selection",
-            "thought": "Scraped product catalogs across Flipkart, Amazon India, and Croma. Filtered for 16GB RAM and NVMe SSD specs under ₹70,000 INR budget ceiling. Identified best deal and generated 1-click store selection options.",
-            "content": """### 💻 Live Hardware Price & Spec Comparison
+        else:
+            return {
+                "intent": "product_comparison_with_selection",
+                "thought": "Scraped product catalogs across Flipkart, Amazon India, and Croma. Filtered for 16GB RAM and NVMe SSD specs under ₹70,000 INR budget ceiling. Identified best deal and generated 1-click store selection options.",
+                "content": """### 💻 Live Hardware Price & Spec Comparison
 
 I compared top 16GB RAM laptops under **₹70,000 INR** across Flipkart, Amazon India, and Croma:
 
@@ -377,102 +401,74 @@ I compared top 16GB RAM laptops under **₹70,000 INR** across Flipkart, Amazon 
 🏆 **Optimal Recommendation:** **HP Pavilion 15** at **₹59,990 INR** on Flipkart *(Saves ₹10,010 under your ₹70,000 limit)*.
 
 👇 **Choose which store you want me to proceed with:**"""
-        }
+            }
 
     # -----------------------------------------------------
-    # 3. CAB / UBER / RIDE BOOKING INTENT
+    # 3. FLIGHT BOOKING INTENT WITH HITL BOUNDARY (EXPLICIT FLIGHT KEYWORDS)
     # -----------------------------------------------------
-    elif "select uber go" in lower:
-        return {
-            "intent": "cab_order_interrupt",
-            "ride": "Uber Go",
-            "price": 720,
-            "eta": "4 mins",
-            "thought": "User chose Uber Go. Verified pickup GPS coordinates, calculated route distance (38 km to Airport), and paused at dispatch authorization.",
-            "content": """### 🔒 Transaction Boundary: Confirm Uber Go Booking
+    elif any(w in lower for w in ["flight", "fly", "airline", "plane", "patna", "spicejet", "indigo"]):
+        if any(w in lower for w in ["authorize", "pay now", "confirm", "approve"]) and any(w in lower for w in ["flight", "4680", "4,680", "ticket"]):
+            pnr = f"6E-{random.randint(100, 999)}{chr(random.randint(65, 90))}{chr(random.randint(65, 90))}"
+            voucher_md = f"""# Electronic Flight Itinerary & Tax Invoice
+* Issued Autonomously by ReactAI Agent
 
-The agent configured your ride and halted before dispatching the driver:
+**PNR Reference:** `{pnr}`
+**Passenger:** Valued Traveler
+**Route:** Bangalore (BLR) ➔ Patna (PAT)
+**Flight:** SpiceJet SG-8721 (Non-stop)
+**Date:** 25th October 2026 | Dep: 06:15 AM
+**Status:** CONFIRMED & TICKETED
+**Total Paid:** ₹4,680 INR
+"""
+            return {
+                "intent": "flight_booked",
+                "pnr": pnr,
+                "voucher": voucher_md,
+                "thought": "Human operator authorized payment. Resumed state graph execution, completed payment dispatch tool, minted PNR reference, and compiled signed e-ticket voucher.",
+                "content": f"""### ✈️ Transaction Authorized & Flight Booked!
 
-* **Ride Category:** **Uber Go (Compact Sedan)**
-* **Pickup:** Indiranagar 100ft Road, Bangalore
-* **Destination:** Kempegowda International Airport (BLR) — Terminal 1
-* **Estimated Trip Time:** 52 mins (38.4 km via Bellary Rd)
-* **Trip Fare:** **₹720 INR** *(No surge pricing active)*
-* **Payment Mode:** Auto-debit on trip completion (UPI / Card)
+Your payment authorization of **₹4,680 INR** was verified and processed:
 
-> 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch the nearest driver."""
-        }
+* **PNR / Booking Reference:** `{pnr}`
+* **Airline:** **SpiceJet (SG-8721)**
+* **Route:** BLR ➔ PAT (Non-stop, 2h 30m)
+* **Schedule:** Departs **06:15 AM** | Arrives **08:45 AM**
+* **Total Paid:** **₹4,680 INR**
+* **Baggage:** 15kg Check-in + 7kg Cabin Included
 
-    elif "select uber premier" in lower:
-        return {
-            "intent": "cab_order_interrupt",
-            "ride": "Uber Premier",
-            "price": 940,
-            "eta": "6 mins",
-            "thought": "User selected Uber Premier. Configured luxury sedan pickup, locked in fixed fare, and paused at dispatch authorization.",
-            "content": """### 🔒 Transaction Boundary: Confirm Uber Premier Booking
+📄 **E-Ticket Voucher:** Signed itinerary compiled and ready for download below."""
+            }
+        else:
+            flight_data = {
+                "airline": "SpiceJet",
+                "flightNumber": "SG-8721",
+                "origin": "Bangalore (BLR)",
+                "destination": "Patna (PAT)",
+                "departure": "06:15 AM",
+                "arrival": "08:45 AM",
+                "stops": "Non-stop",
+                "duration": "2h 30m",
+                "price": 4680,
+                "budget": 6000,
+                "baggage": "15kg Check-in + 7kg Cabin Included",
+                "cancellation": "Free cancellation within 24h"
+            }
+            return {
+                "intent": "hitl_transaction_interrupt",
+                "flight": flight_data,
+                "thought": "Searched live airline schedules, evaluated 4 flight combinations, validated strict budget (< ₹6,000) and baggage constraints. Reached high-risk financial boundary: Next Action = 'Submit Payment (₹4,680)'. Froze execution state to require human authorization.",
+                "content": f"""### ⏸️ Human-in-the-Loop Transaction Boundary Enforced
 
-* **Ride Category:** **Uber Premier (Executive Sedan / Honda City)**
-* **Pickup:** Indiranagar 100ft Road, Bangalore
-* **Destination:** Kempegowda International Airport (BLR) — Terminal 1
-* **Trip Fare:** **₹940 INR** *(Top-rated drivers only, extra legroom)*
-* **Driver ETA:** 6 mins away
+The autonomous agent completed **95% of data retrieval, constraint validation, and form entry**:
 
-> 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch your Premier cab."""
-        }
+* **Route:** {flight_data['origin']} ➔ {flight_data['destination']} ({flight_data['stops']}, {flight_data['duration']})
+* **Flight:** **{flight_data['airline']} ({flight_data['flightNumber']})**
+* **Departure:** {flight_data['departure']} on **25th October 2026**
+* **Total Transaction Amount:** **₹{flight_data['price']:,} INR** *(Saves ₹{flight_data['budget'] - flight_data['price']:,} under your ₹{flight_data['budget']:,} budget)*
+* **Included Add-ons:** {flight_data['baggage']} • {flight_data['cancellation']}
 
-    elif "select ola prime" in lower:
-        return {
-            "intent": "cab_order_interrupt",
-            "ride": "Ola Prime Sedan",
-            "price": 780,
-            "eta": "7 mins",
-            "thought": "User selected Ola Prime. Loaded Ola API credentials, checked car availability, and paused for human confirmation.",
-            "content": """### 🔒 Transaction Boundary: Confirm Ola Prime Booking
-
-* **Ride Category:** **Ola Prime Sedan (Hyundai Aura / Dzire)**
-* **Pickup:** Indiranagar 100ft Road, Bangalore
-* **Destination:** Kempegowda International Airport (BLR)
-* **Trip Fare:** **₹780 INR** *(Free in-cab WiFi included)*
-* **Driver ETA:** 7 mins away
-
-> 🛡️ **HITL Safety Intercept**: Click confirm below to dispatch your Ola cab."""
-        }
-
-    elif "authorize cab" in lower or ("confirm" in lower and any(w in lower for w in ["uber", "ola", "cab", "ride", "dispatch", "720", "940", "780"])):
-        otp = random.randint(1000, 9999)
-        return {
-            "intent": "cab_dispatched",
-            "otp": otp,
-            "thought": "Human operator authorized ride. Dispatched Uber API dispatch hook, assigned nearest 4.88★ driver, and minted start-trip OTP.",
-            "content": f"""### 🚖 Cab Confirmed & Driver En Route!
-
-Your driver has accepted the trip and is heading to your pickup location:
-
-* **Driver:** **Rajesh Kumar** (⭐ 4.88 • 2,410+ trips)
-* **Vehicle:** White Suzuki Dzire (`KA-04-MM-8219`)
-* **Start-Trip OTP / PIN:** `{otp}` *(Share with driver before departure)*
-* **Driver ETA:** **Arriving in 4 minutes**
-* **Pickup Location:** Indiranagar 100ft Rd (Opp. Metro Pillar 124)
-* **Estimated Fare:** ₹720 INR"""
-        }
-
-    elif any(w in lower for w in ["uber", "ola", "cab", "taxi", "ride"]):
-        return {
-            "intent": "cab_comparison_with_selection",
-            "thought": "Queried live ride-hailing APIs across Uber and Ola for pickup at Indiranagar to Kempegowda International Airport. Compared fares, ETAs, and car classes.",
-            "content": """### 🚗 Live Cab & Ride-Hailing Comparison
-
-I checked live fares and nearby driver availability for **Indiranagar ➔ BLR Airport (38 km)**:
-
-| Ride Option | Vehicle Type | Driver ETA | Fare | Best For |
-| :--- | :--- | :--- | :--- | :--- |
-| **Uber Go** | Suzuki Dzire / WagonR | **4 mins** | **₹720 INR** | 🏆 **Best Value & Fastest ETA** |
-| **Uber Premier** | Honda City / Ciaz | **6 mins** | **₹940 INR** | Top-rated 4.9★ driver & legroom |
-| **Ola Prime Sedan** | Hyundai Aura / Dzire | **7 mins** | **₹780 INR** | In-cab WiFi & entertainment |
-
-👇 **Select which cab you would like me to book:**"""
-        }
+> 🛡️ **HITL Safety Intercept Triggered**: The agent **MUST NOT** click "Pay Now" autonomously. State graph is **FROZEN**. Please review the parameters and authorize payment below."""
+            }
 
     # -----------------------------------------------------
     # 4. RESTAURANT RESERVATION INTENT
