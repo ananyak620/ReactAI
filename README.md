@@ -38,8 +38,8 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ## 📸 Visual Showcase & Live Screenshots
 
-### 1. 🛡️ Human-in-the-Loop (HITL) Transaction Boundary Intercept
-> The agent validates 5 strict constraints (budget, date, direct route, baggage, free cancellation) autonomously, then **freezes the StateGraph execution** at the payment step. Irreversible actions require verified human authorization.
+### 1. 🛡️ Human-in-the-Loop (HITL) Safety Intercept & Multi-Constraint Validation
+> The agent parses complex natural language requests, validates constraints against live airline data, and **freezes the LangGraph StateGraph** at the payment step. Irreversible financial actions strictly require verified operator authorization.
 
 <div align="center">
   <img src="assets/screenshots/hitl_approval_modal.png" alt="HITL Transaction Boundary Approval Card" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);" />
@@ -47,16 +47,34 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ---
 
-### 2. 🚗 Cab Booking with Google Maps Route & Live Driver GPS Telemetry
-> Prompts for missing pickup/drop locations, calculates realistic travel times & toll details via Google Maps route intelligence, and displays live driver GPS telemetry (`Indiranagar 100ft Rd`, 1.8 km away) with driver details and trip OTP upon operator dispatch.
+### 2. ✈️ Transaction Authorized & Official E-Ticket PNR Minted
+> Upon verified operator approval, the agent executes the transaction commit tool, processes payment within budget, mints an authentic PNR reference code (`6E-691AE`), and compiles a signed downloadable E-ticket voucher.
 
 <div align="center">
-  <img src="assets/screenshots/cab_booking_gps_telemetry.png" alt="Cab Booking with Google Maps Route and GPS Telemetry" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(56, 189, 248, 0.35);" />
+  <img src="assets/screenshots/flight_authorized_pnr.png" alt="Flight Authorized and PNR Generated" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.35);" />
 </div>
 
 ---
 
-### 3. ⚡ 3-Way Instant Quick Commerce Grocery Comparison
+### 3. 🚗 Google Maps Route Intelligence & Live Driver Navigation Feed
+> Prompts for missing pickup/drop coordinates, calculates optimal routes (`NH 44 / Bellary Rd Elevated Expressway • 38.4 km • 48 mins`), factors in airport tolls, and binds precise GPS coordinates (`12.9784° N, 77.6408° E`) with physical landmarks (Indiranagar Metro Pillar 124).
+
+<div align="center">
+  <img src="assets/screenshots/cab_booking_gps_telemetry.png" alt="Google Maps Route and Navigation Feed" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(56, 189, 248, 0.35);" />
+</div>
+
+---
+
+### 4. 🚖 Real-Time Ride Fleet Comparison & 1-Click Dispatch
+> Aggregates live fleets across **Uber and Ola**, comparing vehicle classes, driver ETAs, and fares with 1-click interactive booking dispatch buttons (`Uber Go`, `Uber Premier`, `Ola Prime`).
+
+<div align="center">
+  <img src="assets/screenshots/cab_fleet_selection.png" alt="Cab Fleet Comparison and 1-Click Dispatch" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(56, 189, 248, 0.35);" />
+</div>
+
+---
+
+### 5. ⚡ 3-Way Instant Quick Commerce Grocery Comparison
 > When asked to order essentials, the agent prompts for an item list with 1-click curated baskets, then executes an instant 3-way price and delivery ETA comparison across **Flipkart Minutes, Zepto, and Blinkit** with 1-click store selection and checkout gating.
 
 <div align="center">
@@ -65,16 +83,7 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ---
 
-### 4. ✈️ Transaction Authorized & E-Ticket PNR Minted
-> Upon verified operator approval, the agent executes the commit tool, charges the authorized amount, mints an authentic PNR reference code (`6E-168HT`), and renders an instant signed E-ticket voucher for download.
-
-<div align="center">
-  <img src="assets/screenshots/flight_authorized_pnr.png" alt="Flight Authorized and PNR Generated" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.35);" />
-</div>
-
----
-
-### 5. 💻 Multi-Store Hardware Price & Spec Comparison
+### 6. 💻 Multi-Store Hardware Price & Spec Comparison
 > Scrapes live product listings across **Flipkart, Amazon India, and Croma**, filtering by RAM, SSD, and budget limits to mathematically determine the optimal deal, and provides 1-click store selection buttons.
 
 <div align="center">
@@ -83,7 +92,7 @@ Experience the complete end-to-end autonomous execution with Human-in-the-Loop s
 
 ---
 
-### 6. 💻 Full-Stack React + Vite Glassmorphic Enterprise UI
+### 7. 💻 Full-Stack React + Vite Glassmorphic Enterprise UI
 > Dual-deployment architecture: Includes a standalone Python Streamlit app for cloud deployment alongside a high-throughput Node.js + React production workspace.
 
 <div align="center">
