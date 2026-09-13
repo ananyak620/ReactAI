@@ -86,11 +86,34 @@ div[data-testid="stChatMessage"]:nth-child(even) {{
     border: 1px solid rgba(56, 189, 248, 0.3) !important;
 }}
 
-/* Chat input bottom bar styling - ensure it doesn't overlap text */
-div[data-testid="stBottom"] {{
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(10, 15, 26, 0.85) 30%, rgba(10, 15, 26, 0.96) 100%) !important;
-    backdrop-filter: blur(12px) !important;
-    padding-bottom: 1.5rem !important;
+/* Bottom bar completely transparent so wallpaper flows seamlessly to bottom edge */
+div[data-testid="stBottom"],
+div[data-testid="stBottom"] > div {{
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}}
+
+/* Floating Glassmorphic Chat Input */
+div[data-testid="stChatInput"] {{
+    background: rgba(15, 23, 42, 0.85) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6) !important;
+    margin-bottom: 0.5rem !important;
+}}
+
+div[data-testid="stChatInput"]:focus-within {{
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4) !important;
+}}
+
+/* Hide default Streamlit footer */
+footer {{
+    display: none !important;
+    visibility: hidden !important;
 }}
 
 /* HITL Boundary Alert Box */
