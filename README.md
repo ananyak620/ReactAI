@@ -2,17 +2,35 @@
 
 <div align="center">
 
+[![Watch Live Demo Video](https://img.shields.io/badge/▶_Watch_Demo_Video-Streamable-FF1361?style=for-the-badge&logoColor=white)](https://streamable.com/dspf3w?src=player-page-share)
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/)
-![License](https://img.shields.io/badge/License-MIT-emerald.svg?style=flat-square)
-![React](https://img.shields.io/badge/Frontend-React_18_•_Vite-61dafb.svg?style=flat-square)
+
+[![License](https://img.shields.io/badge/License-MIT-emerald.svg?style=flat-square)](#-license)
 ![Python](https://img.shields.io/badge/Python-3.10+-3776ab.svg?style=flat-square)
+![React](https://img.shields.io/badge/Frontend-React_18_•_Vite-61dafb.svg?style=flat-square)
 ![Node](https://img.shields.io/badge/Backend-Node.js_•_Express-339933.svg?style=flat-square)
 ![Orchestrator](https://img.shields.io/badge/State_Graph-LangGraph_ReAct-f59e0b.svg?style=flat-square)
 ![Multi-Model Hub](https://img.shields.io/badge/AI_Gateway-Anakin.ai-7c3aed.svg?style=flat-square)
 
 **An enterprise-grade autonomous ReAct (Reason + Act) agent that executes 95% of tedious web research, multi-constraint policy validation, price comparison, and form-filling labor, while enforcing deterministic Human-in-the-Loop (HITL) checkpoints at irreversible financial boundaries.**
 
-[🚀 **Launch Live Streamlit App**](https://share.streamlit.io/) • [✨ **GitHub Repository**](https://github.com/ananyak620/ReactAI) • [📖 **Architecture Guide**](#-execution-architecture--state-graph) • [📸 **UI Showcase**](#-visual-showcase--live-screenshots)
+[🎥 **Watch Demo Video**](https://streamable.com/dspf3w?src=player-page-share) • [🚀 **Launch Live Streamlit App**](https://share.streamlit.io/) • [✨ **GitHub Repo**](https://github.com/ananyak620/ReactAI) • [📸 **Screenshots Showcase**](#-visual-showcase--live-screenshots) • [📖 **Architecture**](#-execution-architecture--state-graph)
+
+</div>
+
+---
+
+## 🎥 Video Walkthrough & Live Demonstration
+
+Experience the complete end-to-end autonomous execution with Human-in-the-Loop safety boundaries:
+
+<div align="center">
+
+[![ReactAI Live Demo Video Walkthrough](assets/screenshots/hitl_approval_modal.png)](https://streamable.com/dspf3w?src=player-page-share)
+
+👉 **[Click Here to Watch the Full Video Walkthrough on Streamable](https://streamable.com/dspf3w?src=player-page-share)** 👈
+
+*Demonstrates multi-constraint flight search, StateGraph execution freeze at the payment step, human authorization click, signed PNR generation, and multi-portal laptop price comparison.*
 
 </div>
 
@@ -20,38 +38,47 @@
 
 ## 📸 Visual Showcase & Live Screenshots
 
-### 1. 🌌 ReactAI Interactive Workspace (Streamlit Cloud & Local)
-> High-performance conversational interface featuring multi-model selection (Claude 3.7 Sonnet, GPT-4o), one-click operational quick-actions, and live ReAct thinking trace.
-
-<div align="center">
-  <img src="assets/screenshots/streamlit_dashboard.png" alt="ReactAI Streamlit Dashboard" width="90%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);" />
-</div>
-
----
-
-### 2. 🛡️ Human-in-the-Loop (HITL) Transaction Boundary Intercept
+### 1. 🛡️ Human-in-the-Loop (HITL) Transaction Boundary Intercept
 > The agent validates 5 strict constraints (budget, date, direct route, baggage, free cancellation) autonomously, then **freezes the StateGraph execution** at the payment step. Irreversible actions require verified human authorization.
 
 <div align="center">
-  <img src="assets/screenshots/hitl_flight_boundary.png" alt="HITL Transaction Boundary Card" width="90%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(245, 158, 11, 0.3);" />
+  <img src="assets/screenshots/hitl_approval_modal.png" alt="HITL Transaction Boundary Approval Card" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(245, 158, 11, 0.35);" />
 </div>
 
 ---
 
-### 3. 🔬 Deep Web Research & Technical Silicon Benchmarks
+### 2. ✈️ Transaction Authorized & E-Ticket PNR Minted
+> Upon verified operator approval, the agent executes the commit tool, charges the authorized amount, mints an authentic PNR reference code (`6E-168HT`), and renders an instant signed E-ticket voucher for download.
+
+<div align="center">
+  <img src="assets/screenshots/flight_authorized_pnr.png" alt="Flight Authorized and PNR Generated" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.35);" />
+</div>
+
+---
+
+### 3. 💻 Multi-Store Hardware Price & Spec Comparison
+> Scrapes live product listings across **Flipkart, Amazon India, and Croma**, filtering by RAM, SSD, and budget limits to mathematically determine the optimal deal.
+
+<div align="center">
+  <img src="assets/screenshots/hardware_price_comparison.png" alt="Hardware Price Comparison across Stores" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(56, 189, 248, 0.35);" />
+</div>
+
+---
+
+### 4. 🔬 Deep Web Research & Technical Silicon Benchmarks
 > Live multi-source synthesis across arXiv whitepapers, technical model cards, and datacenter hardware specs (e.g., DeepSeek-V3 MLA KV-cache vs. Llama 3.3 70B, Google Axion vs. AWS Graviton4).
 
 <div align="center">
-  <img src="assets/screenshots/deep_research_moe.png" alt="Deep Web Research & Model Benchmarks" width="90%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);" />
+  <img src="assets/screenshots/deep_research_moe.png" alt="Deep Web Research & Model Benchmarks" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.35);" />
 </div>
 
 ---
 
-### 4. 💻 Full-Stack React + Vite Glassmorphic Web App
+### 5. 💻 Full-Stack React + Vite Glassmorphic Enterprise UI
 > Dual-deployment architecture: Includes a standalone Python Streamlit app for cloud deployment alongside a high-throughput Node.js + React production workspace.
 
 <div align="center">
-  <img src="assets/screenshots/react_web_app.png" alt="React AI Full-Stack Web App" width="90%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);" />
+  <img src="assets/screenshots/react_web_app.png" alt="React AI Full-Stack Web App" width="92%" style="border-radius: 10px; box-shadow: 0 8px 30px rgba(99, 102, 241, 0.35);" />
 </div>
 
 ---
@@ -207,10 +234,12 @@ Try these pre-configured prompts directly in the chat to test agent depth:
 ```
 ReactAI/
 ├── assets/
-│   └── screenshots/             # High-resolution screenshots for README
-│       ├── streamlit_dashboard.png
-│       ├── hitl_flight_boundary.png
+│   └── screenshots/             # Live UI screenshots for README & docs
+│       ├── hitl_approval_modal.png
+│       ├── flight_authorized_pnr.png
+│       ├── hardware_price_comparison.png
 │       ├── deep_research_moe.png
+│       ├── streamlit_dashboard.png
 │       └── react_web_app.png
 │
 ├── streamlit_app.py             # Standalone Streamlit Cloud Application
