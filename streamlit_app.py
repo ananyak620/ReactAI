@@ -136,7 +136,14 @@ with st.sidebar:
         index=0
     )
     
-    anakin_key = st.text_input("Anakin API Key (Optional)", type="password", placeholder="Paste Anakin key...")
+    default_key = os.environ.get("ANAKIN_API_KEY", "")
+    if not default_key:
+        try:
+            default_key = st.secrets.get("ANAKIN_API_KEY", "")
+        except Exception:
+            pass
+    
+    anakin_key = st.text_input("Anakin API Key (Optional)", value=default_key, type="password", placeholder="Paste Anakin key...")
     model_choice = st.selectbox(
         "Model Tier",
         ["Claude 3.7 Sonnet", "GPT-4o", "Claude 3.5 Sonnet", "Llama 3.3 70B"],
