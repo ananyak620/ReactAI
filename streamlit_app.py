@@ -318,15 +318,16 @@ Your driver has accepted the trip and is navigating to your pickup location:
         <span style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; padding: 0.2rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">1.8 km away • ETA 4 mins</span>
     </div>
     <div style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.6;">
-        👤 <strong>Driver:</strong> <strong>Rajesh Kumar</strong> (⭐ 4.88 • 2,410+ trips)<br>
+        👤 <strong>Assigned Driver:</strong> <strong>Rajesh Kumar</strong> (⭐ 4.88 • 2,410+ trips)<br>
         🚗 <strong>Vehicle:</strong> White Suzuki Dzire (<code>KA-04-MM-8219</code>)<br>
-        📍 <strong>Current Position:</strong> 100ft Rd, Indiranagar (Heading North toward Metro Pillar 124)<br>
+        📍 <strong>Current Location Name:</strong> <strong>100ft Road, near 12th Main Signal, Indiranagar, Bengaluru</strong><br>
+        🌐 <strong>GPS Coordinates:</strong> <code>12.9812° N, 77.6382° E</code> (Heading North toward your pickup spot)<br>
         🔐 <strong>Start-Trip OTP / PIN:</strong> <span style="font-size: 1.15rem; color: #fbbf24; font-weight: bold; background: rgba(245, 158, 11, 0.15); padding: 0.2rem 0.6rem; border-radius: 6px;">{otp}</span> <em>(Share with driver before departure)</em>
     </div>
 </div>
 
-* **Pickup Location:** Indiranagar 100ft Rd (Opp. Metro Pillar 124)
-* **Destination:** Kempegowda International Airport (BLR)
+* **📍 Pickup Location Name:** Indiranagar 100ft Road, Bengaluru *(Landmark: Opposite Metro Pillar 124)*
+* **🏁 Destination Location Name:** Kempegowda International Airport (BLR) *(Terminal 1 Departure)*
 * **Estimated Fare:** ₹720 INR"""
             }
 
@@ -356,11 +357,11 @@ To plot the fastest route on **Google Maps** and query live **Uber & Ola** drive
         <span style="color: #38bdf8; font-weight: 600; font-size: 0.88rem;">🗺️ Google Maps Navigation • Real-Time Traffic Feed</span>
         <span style="background: rgba(16, 185, 129, 0.15); color: #34d399; padding: 0.2rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600;">🟢 Fast Route (48 mins)</span>
     </div>
-    <div class="map-pin">🟢 <strong>Pickup:</strong> Indiranagar 100ft Road, Bangalore <em>(GPS: 12.9784° N, 77.6408° E)</em></div>
+    <div class="map-pin">🟢 <strong>Pickup Location:</strong> Indiranagar 100ft Road, Bengaluru <em>(GPS: 12.9784° N, 77.6408° E • Landmark: Metro Pillar 124)</em></div>
     <div class="route-line">
         ↕ <strong>Via Bellary Rd / NH 44 Elevated Expressway</strong> • <strong>38.4 km</strong> (₹115 Airport Toll Included)
     </div>
-    <div class="map-pin">🏁 <strong>Destination:</strong> Kempegowda International Airport (BLR) <em>(GPS: 13.1989° N, 77.7068° E)</em></div>
+    <div class="map-pin">🏁 <strong>Dropoff Destination:</strong> Kempegowda International Airport (BLR) <em>(GPS: 13.1989° N, 77.7068° E • Devanahalli Terminal 1 & 2)</em></div>
 </div>
 
 I checked live fares and nearby driver availability:
@@ -769,7 +770,7 @@ for idx, msg in enumerate(st.session_state.messages):
                     st.write(data["thought"])
             
             # Message Content
-            st.markdown(data.get("content", ""))
+            st.markdown(data.get("content", ""), unsafe_allow_html=True)
             
             # -------------------------------------------------
             # INTERACTION 1: FLIGHT BOOKING HITL CARD

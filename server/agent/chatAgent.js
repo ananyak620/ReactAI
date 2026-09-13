@@ -383,12 +383,13 @@ async function handleCabIntent(text, lower, history) {
 
 Your driver has accepted the trip and is navigating to your pickup location:
 
-* **Driver:** **Rajesh Kumar** (⭐ 4.88 • 2,410+ trips)
+* **Assigned Driver:** **Rajesh Kumar** (⭐ 4.88 • 2,410+ trips)
 * **Vehicle:** White Suzuki Dzire (\`KA-04-MM-8219\`)
-* **Live GPS Position:** Indiranagar 100ft Rd (1.8 km away • Arriving in 4 minutes)
-* **Start-Trip OTP / PIN:** \`${otp}\` *(Share with driver before departure)*
-* **Pickup:** Indiranagar 100ft Rd (Opp. Metro Pillar 124)
-* **Destination:** Kempegowda International Airport (BLR)
+* **📍 Current Driver Location:** **100ft Road, near 12th Main Signal, Indiranagar, Bengaluru**
+* **🌐 GPS Telemetry:** \`12.9812° N, 77.6382° E\` *(Heading North toward your pickup spot • 1.8 km away • Arriving in 4 minutes)*
+* **🔐 Start-Trip OTP / PIN:** \`${otp}\` *(Share with driver before departure)*
+* **📍 Pickup Location Name:** Indiranagar 100ft Road, Bengaluru *(Opp. Metro Pillar 124)*
+* **🏁 Destination Location Name:** Kempegowda International Airport (BLR) — Terminal 1
 * **Estimated Fare:** ₹720 INR`
     };
   }
@@ -403,8 +404,8 @@ Your driver has accepted the trip and is navigating to your pickup location:
       content: `### 🔒 Transaction Boundary: Confirm Uber Go Booking
 
 * **Ride Option:** **Uber Go (Compact Sedan)**
-* **📍 Pickup:** Indiranagar 100ft Road, Bangalore *(GPS: 12.9784° N, 77.6408° E)*
-* **🏁 Destination:** Kempegowda International Airport (BLR) — Terminal 1 *(GPS: 13.1989° N, 77.7068° E)*
+* **📍 Pickup Location Name:** Indiranagar 100ft Road, Bengaluru *(GPS: 12.9784° N, 77.6408° E • Metro Pillar 124)*
+* **🏁 Destination Location Name:** Kempegowda International Airport (BLR) — Terminal 1 *(GPS: 13.1989° N, 77.7068° E)*
 * **🗺️ Google Maps Route:** Via Bellary Rd / NH 44 (38.4 km • 48 mins • Toll ₹115 included)
 * **Locked Fare:** **₹720 INR** *(No surge pricing active)*
 
@@ -452,9 +453,9 @@ To plot your route on **Google Maps** and query nearby **Uber & Ola** drivers, p
     ],
     content: `### 🗺️ Google Maps Live Route & Ride-Hailing Fleet
 
-* **📍 Pickup:** Indiranagar 100ft Road *(GPS: 12.9784° N, 77.6408° E)*
-* **🏁 Destination:** Kempegowda International Airport (BLR) *(GPS: 13.1989° N, 77.7068° E)*
-* **🗺️ Route Telemetry:** Via Bellary Rd / NH 44 (38.4 km • 🟢 Live Traffic: Fast • 48 mins)
+* **📍 Pickup Location Name:** Indiranagar 100ft Road, Bengaluru *(GPS: 12.9784° N, 77.6408° E • Landmark: Opposite Metro Pillar 124)*
+* **🏁 Dropoff Location Name:** Kempegowda International Airport (BLR) — Terminal 1 & 2 *(GPS: 13.1989° N, 77.7068° E • Devanahalli)*
+* **🗺️ Route Telemetry:** Via Bellary Rd / NH 44 Elevated Expressway (38.4 km • 🟢 Live Traffic: Fast • 48 mins • Toll ₹115 included)
 
 | Ride Option | Vehicle Class | Driver Proximity | Fare | Highlights |
 | :--- | :--- | :--- | :--- | :--- |
