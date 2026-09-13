@@ -1,0 +1,15 @@
+{
+  "name": "react-ai-agent-system",
+  "version": "1.0.0",
+  "description": "Autonomous ReAct (Read, Reason, React) AI Agent System",
+  "main": "server/index.js",
+  "scripts": {
+    "server": "node server/index.js",
+    "client": "npm --prefix client run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "start": "node server/index.js"
+  },
+  "keywords": ["ai-agent", "react", "reasoning", "autonomous", "web-agent"],
+  "author": "",
+  "license": "MIT"
+}
